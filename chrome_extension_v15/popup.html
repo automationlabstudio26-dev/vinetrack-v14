@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>VineTrack Sync</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <main>
+    <header class="brand-row">
+      <div class="logo">V</div>
+      <div><strong>VineTrack Sync</strong><span>Amazon Vine → VineTrack</span></div>
+      <span id="statusBadge" class="badge">Checking</span>
+    </header>
+
+    <section id="connectionCard" class="card">
+      <div class="card-head"><div><small>VineTrack account</small><strong id="accountName">Not connected</strong><span id="accountEmail">Open VineTrack and connect once.</span></div></div>
+      <button id="connectBtn" class="primary">Connect VineTrack</button>
+      <button id="openVineTrack" class="secondary" hidden>Open VineTrack</button>
+    </section>
+
+    <section class="card amazon-card">
+      <div class="card-head"><div><small>Current tab</small><strong id="amazonState">Open Amazon Vine</strong><span id="amazonHint">Go to your Vine Orders or Reviews page.</span></div><span id="vineBadge" class="dot-badge">Not detected</span></div>
+      <button id="syncNow" class="primary" disabled>Sync My Vine Items</button>
+      <div id="syncMessage" class="message"></div>
+    </section>
+
+    <section class="mini-card">
+      <div><small>Last sync</small><strong id="lastSync">Never</strong></div>
+      <button id="disconnectBtn" class="text-btn" hidden>Disconnect</button>
+    </section>
+
+    <p class="trust"><strong>You stay in control.</strong> VineTrack reads visible Vine item details only after you click Sync. It does not ask for your Amazon password, run automatic background scraping, choose star ratings, or submit reviews.</p>
+  </main>
+  <script src="popup.js"></script>
+</body>
+</html>

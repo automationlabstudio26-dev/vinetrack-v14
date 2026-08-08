@@ -1,4 +1,4 @@
-VineTrack Beta v14 — CLEAN GitHub + Railway Deployment Package
+VineTrack Beta v15 — CLEAN GitHub + Railway Deployment Package
 ===============================================================
 
 IMPORTANT
@@ -22,7 +22,7 @@ Do NOT upload the enclosing extracted folder as one folder.
 NEW GITHUB REPOSITORY
 ---------------------
 1. Create a new GitHub repository, for example:
-     vinetrack-v14
+     vinetrack-v15
 2. Create it as Private.
 3. Open the new repository.
 4. Add file > Upload files.
@@ -37,7 +37,7 @@ After the first commit, confirm the GitHub branch shown is:
 NEW RAILWAY SERVICE
 -------------------
 1. In Railway, create a new project/service from the new GitHub repository.
-2. Select the new vinetrack-v14 repository.
+2. Select the new vinetrack-v15 repository.
 3. Because Dockerfile and server.py are at GitHub repository root:
      ROOT DIRECTORY = leave blank
 4. Railway should automatically use Dockerfile.
@@ -54,7 +54,7 @@ NEW RAILWAY SERVICE
 CHROME EXTENSION
 ----------------
 The Chrome Web Store upload ZIP is:
-  VineTrack_Sync_Chrome_Extension_v14_Store.zip
+  VineTrack_Sync_Chrome_Extension_v15_Store.zip
 
 After Chrome Web Store assigns the extension ID and listing URL, add:
   VINETRACK_CHROME_STORE_URL=<Chrome Web Store listing URL>
@@ -68,4 +68,4 @@ old volume/database before retiring the old service.
 
 VERSION
 -------
-VineTrack Beta v14
+VineTrack Beta v15

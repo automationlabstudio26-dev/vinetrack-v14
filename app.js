@@ -195,10 +195,10 @@ $('prepareFromListing').onclick=prepareFieldsFromListing;
 function loadReviewProduct(id,go=false){
   const p=products.find(x=>x.id===id);if(!p)return;
   $('reviewProduct').value=p.id;$('reviewListing').value=p.listingText||'';$('reviewTested').value=p.notes||'';$('reviewPros').value=p.pros||'';$('reviewCons').value=p.cons||'';$('reviewTitleOutput').value=p.reviewTitle||'';$('reviewOutput').value=p.reviewText||'';$('originalDraft').value=p.originalDraft||p.reviewText||'';
-  updateAmazonReviewButton();updateReviewMetrics();updateDraftComparison();
+  updateAmazonReviewButton();updateReviewMetrics();updateDraftComparison();updateReviewGuide();
   if(go)switchView('review');
 }
-$('reviewProduct').onchange=e=>{if(e.target.value)loadReviewProduct(e.target.value);else updateAmazonReviewButton();};
+$('reviewProduct').onchange=e=>{if(e.target.value)loadReviewProduct(e.target.value);else{updateAmazonReviewButton();updateReviewGuide();}};
 
 function cleanSentence(text){const t=String(text||'').trim().replace(/\s+/g,' ');if(!t)return'';return /[.!?]$/.test(t)?t:t+'.';}
 function sentenceList(text){return String(text||'').split(/\n|;|\.(?=\s|$)/).map(s=>s.trim()).filter(Boolean);}
@@ -268,9 +268,10 @@ function generateDraft(){
   $('originalDraft').value=$('reviewOutput').value;const current=selectedReviewProduct();if(current){current.originalDraft=$('reviewOutput').value;current.generatedCount=Number(current.generatedCount||0)+1;}
   updateAmazonReviewButton();updateReviewMetrics();updateDraftComparison();
 }
-$('generateReview').onclick=generateDraft;['reviewOutput','reviewTested','reviewPros','reviewCons','reviewAccuracy','reviewAudience'].forEach(id=>$(id).addEventListener('input',updateReviewMetrics));
+$('generateReview').onclick=generateDraft;['reviewOutput','reviewTested','reviewPros','reviewCons','reviewAccuracy','reviewAudience'].forEach(id=>$(id).addEventListener('input',()=>{updateReviewMetrics();updateReviewGuide();}));
 $('copyReview').onclick=async()=>{const text=[$('reviewTitleOutput').value,$('reviewOutput').value].filter(Boolean).join('\n\n');if(!text){alert('Generate a draft first.');return;}try{await navigator.clipboard.writeText(text);alert('Review copied.');}catch{alert('Copy failed. Select and copy the text manually.');}};
 $('saveReview').onclick=()=>{const p=products.find(x=>x.id===$('reviewProduct').value);if(!p){alert('Select a saved product first.');return;}p.listingText=$('reviewListing').value.trim();p.notes=$('reviewTested').value.trim();p.pros=$('reviewPros').value.trim();p.cons=$('reviewCons').value.trim();p.reviewTitle=$('reviewTitleOutput').value.trim();p.reviewText=$('reviewOutput').value.trim();p.originalDraft=$('originalDraft').value||p.originalDraft||'';p.notes=$('reviewTested').value.trim();p.pros=$('reviewPros').value.trim();p.cons=$('reviewCons').value.trim();if(!isSubmittedLike(p)){p.status='Draft ready';p.reviewLifecycle='Draft ready';}appendReviewHistory(p,p.reviewLifecycle||'Draft ready','Draft saved');save();alert('Draft saved to this product.');};
+$('reviewNextProduct').onclick=openNextReviewProduct;
 
 $('openAmazonReview').onclick=()=>{
   const p=selectedReviewProduct();
@@ -285,7 +286,7 @@ $('enableReminders').onclick=enableNotifications;
 $('activityReminderBtn').onclick=enableNotifications;
 $('calendarRange').onchange=renderCalendar;
 $('copyTitle').onclick=async()=>{const text=$('reviewTitleOutput').value.trim();if(!text){alert('Generate a title first.');return;}try{await navigator.clipboard.writeText(text);alert('Title copied.');}catch{alert('Copy failed. Select and copy the title manually.');}};
-$('markSubmitted').onclick=()=>{const p=selectedReviewProduct();if(!p){alert('Select a saved product first.');return;}p.listingText=$('reviewListing').value.trim();p.notes=$('reviewTested').value.trim();p.pros=$('reviewPros').value.trim();p.cons=$('reviewCons').value.trim();p.reviewTitle=$('reviewTitleOutput').value.trim();p.reviewText=$('reviewOutput').value.trim();p.originalDraft=$('originalDraft').value||p.originalDraft||'';p.status='Submitted';p.reviewLifecycle='Submitted';p.submittedAt=new Date().toISOString();appendReviewHistory(p,'Submitted','Marked submitted from Review Assistant');save();alert('Marked as submitted and saved to review history.');};
+$('markSubmitted').onclick=()=>{const p=selectedReviewProduct();if(!p){alert('Select a saved product first.');return;}p.listingText=$('reviewListing').value.trim();p.notes=$('reviewTested').value.trim();p.pros=$('reviewPros').value.trim();p.cons=$('reviewCons').value.trim();p.reviewTitle=$('reviewTitleOutput').value.trim();p.reviewText=$('reviewOutput').value.trim();p.originalDraft=$('originalDraft').value||p.originalDraft||'';p.status='Submitted';p.reviewLifecycle='Submitted';p.submittedAt=new Date().toISOString();appendReviewHistory(p,'Submitted','Marked submitted from Review Assistant');save();updateReviewGuide();alert('Marked as submitted and saved to review history.');};
 
 $('exportBtn').onclick=()=>{const headers=['Product Name','Amazon Link','Category','Tags','Ownership','Status','Order Date','Delivery Date','Target Review Date','Value','Testing Notes','Pros','Cons','Review Title','Review Draft'];const rows=products.map(p=>[p.name,p.link,p.category,(p.tags||[]).join('; '),p.ownership||'',p.status,p.orderDate,p.deliveryDate,p.targetDate,p.value,p.notes,p.pros,p.cons,p.reviewTitle,p.reviewText]);const csv=[headers,...rows].map(r=>r.map(v=>'"'+String(v||'').replaceAll('"','""')+'"').join(',')).join('\n');const blob=new Blob([csv],{type:'text/csv'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='vinetrack-products.csv';a.click();URL.revokeObjectURL(a.href);};
 
@@ -384,9 +385,9 @@ function renderSmartQueue(){
 function renderChecklist(targetId,items,product,type,progressId){
   const el=$(targetId);if(!el)return;const prog=checklistProgress(items);if($(progressId))$(progressId).textContent=`${prog.done}/${prog.total}`;if(!product){el.innerHTML='<span class="muted">Select a product first.</span>';return;}
   el.innerHTML=(items||[]).map((it,i)=>`<label class="check-row"><input type="checkbox" data-check-type="${type}" data-check-index="${i}" ${it.done?'checked':''}><span>${escapeHtml(it.label)}</span></label>`).join('');
-  el.querySelectorAll('input').forEach(input=>input.onchange=()=>{const list=type==='test'?product.testingChecklist:product.photoChecklist;list[Number(input.dataset.checkIndex)].done=input.checked;localStorage.setItem(KEY,JSON.stringify(products));renderSmartQueue();const p=checklistProgress(list);if($(progressId))$(progressId).textContent=`${p.done}/${p.total}`;});
+  el.querySelectorAll('input').forEach(input=>input.onchange=()=>{const list=type==='test'?product.testingChecklist:product.photoChecklist;list[Number(input.dataset.checkIndex)].done=input.checked;localStorage.setItem(KEY,JSON.stringify(products));renderSmartQueue();const p=checklistProgress(list);if($(progressId))$(progressId).textContent=`${p.done}/${p.total}`;updateReviewGuide();});
 }
-function renderReviewPrep(){const p=selectedReviewProduct();renderChecklist('testingChecklistUI',p?.testingChecklist||[],p,'test','testingProgress');renderChecklist('photoChecklistUI',p?.photoChecklist||[],p,'photo','photoProgress');renderLifecycle();}
+function renderReviewPrep(){const p=selectedReviewProduct();renderChecklist('testingChecklistUI',p?.testingChecklist||[],p,'test','testingProgress');renderChecklist('photoChecklistUI',p?.photoChecklist||[],p,'photo','photoProgress');renderLifecycle();updateReviewGuide();}
 function appendReviewHistory(p,status,note=''){
   p.reviewHistory=Array.isArray(p.reviewHistory)?p.reviewHistory:[];
   const snapshot={at:new Date().toISOString(),status:status||p.status,note:String(note||''),title:String(p.reviewTitle||''),text:String(p.reviewText||'')};
@@ -397,6 +398,37 @@ function renderLifecycle(){const p=selectedReviewProduct();if(!$('reviewLifecycl
 function saveLifecycleUpdate(){const p=selectedReviewProduct();if(!p){alert('Select a saved product first.');return;}const stage=$('reviewLifecycle').value,note=$('reviewStatusNote').value.trim();p.reviewLifecycle=stage;p.status=stage;if(stage==='Submitted'&&!p.submittedAt)p.submittedAt=new Date().toISOString();if(stage==='Approved')p.approvedAt=new Date().toISOString();if(stage==='Rejected')p.rejectedAt=new Date().toISOString();p.reviewTitle=$('reviewTitleOutput').value.trim();p.reviewText=$('reviewOutput').value.trim();appendReviewHistory(p,stage,note);save();renderReviewPrep();}
 function refreshTestPackPreview(){const key=$('testingTemplate')?.value;const category={electronics:'Electronics',kitchen:'Kitchen',clothing:'Clothing',beauty:'Beauty',home:'Home'}[key];const el=$('testPackPreview');if(!el)return;el.innerHTML=category?`<strong>${category} checklist:</strong> ${(TESTING_PACKS[category]||[]).map(x=>escapeHtml(x)).join(' • ')}`:'Choose a testing template to preview its neutral checklist.';}
 
+function updateReviewGuide(){
+  const p=selectedReviewProduct();
+  const summary=$('reviewProductSummary');
+  if(summary){
+    if(!p)summary.textContent='Choose a product to begin.';
+    else{
+      const delivered=p.deliveryDate?Math.max(0,Math.floor((Date.now()-new Date(p.deliveryDate).getTime())/86400000)):null;
+      summary.textContent=[p.name,p.category,p.status,delivered!==null?`${delivered} day${delivered===1?'':'s'} since delivery`:null].filter(Boolean).join(' • ');
+    }
+  }
+  const test=p?checklistProgress(p.testingChecklist):{total:0,done:0};
+  const observed=Boolean($('reviewTested')?.value.trim()&&($('reviewPros')?.value.trim()||$('reviewCons')?.value.trim()));
+  const drafted=Boolean($('reviewOutput')?.value.trim());
+  const finished=Boolean(p&&['Submitted','Pending approval','Approved'].includes(p.reviewLifecycle||p.status));
+  const complete={test:Boolean(p&&test.total&&test.done===test.total),observe:observed,draft:drafted,finish:finished};
+  let current='test';
+  if(complete.test)current='observe';
+  if(complete.test&&complete.observe)current='draft';
+  if(complete.test&&complete.observe&&complete.draft)current='finish';
+  document.querySelectorAll('[data-review-step]').forEach(el=>{
+    const key=el.dataset.reviewStep;el.classList.toggle('is-complete',complete[key]);el.classList.toggle('is-current',Boolean(p)&&key===current&&!complete[key]);
+  });
+}
+function openNextReviewProduct(){
+  const current=selectedReviewProduct();if(!current){alert('Select a saved product first.');return;}
+  $('saveReview').click();
+  const queue=smartQueueItems().filter(p=>p.id!==current.id);
+  const next=queue[0]||products.find(p=>p.id!==current.id&&!isSubmittedLike(p));
+  if(next){loadReviewProduct(next.id);document.querySelector('[data-focus-step="test"]')?.scrollIntoView({behavior:'smooth',block:'start'});}
+  else alert('No other open products are waiting.');
+}
 // Review Session
 let reviewSession={ids:[],index:0,processed:0,ready:0,needsTesting:0};
 function startReviewSession(){reviewSession={ids:smartQueueItems().map(p=>p.id),index:0,processed:0,ready:0,needsTesting:0};switchView('session');renderSession();}
@@ -406,8 +438,8 @@ function saveSessionProduct(mode){const p=currentSessionProduct();if(!p)return;p
 function draftSessionProduct(){const p=currentSessionProduct();if(!p)return;p.notes=$('sessionNotes').value.trim();p.pros=$('sessionPros').value.trim();p.cons=$('sessionCons').value.trim();if($('sessionTestingComplete').checked&&!isSubmittedLike(p))p.status='Ready to review';localStorage.setItem(KEY,JSON.stringify(products));loadReviewProduct(p.id,true);}
 
 // In-app feedback local capture
-function feedbackPayload(){return {at:new Date().toISOString(),useful:$('fbUseful')?.value.trim()||'',missing:$('fbMissing')?.value.trim()||'',worthPaying:$('fbWorthPaying')?.value.trim()||'',wouldPay:$('fbWouldPay')?.value||'',recommend:$('fbRecommend')?.value||'',email:$('fbEmail')?.value.trim()||'',app:'VineTrack Beta v14'};}
-function feedbackText(p){return `VineTrack Beta v14 feedback\nMost useful: ${p.useful||'-'}\nMissing/confusing: ${p.missing||'-'}\nWorth paying for: ${p.worthPaying||'-'}\nWould pay: ${p.wouldPay||'-'}\nRecommend (0-10): ${p.recommend||'-'}\nEmail: ${p.email||'-'}\nDate: ${p.at}`;}
+function feedbackPayload(){return {at:new Date().toISOString(),useful:$('fbUseful')?.value.trim()||'',missing:$('fbMissing')?.value.trim()||'',worthPaying:$('fbWorthPaying')?.value.trim()||'',wouldPay:$('fbWouldPay')?.value||'',recommend:$('fbRecommend')?.value||'',email:$('fbEmail')?.value.trim()||'',app:'VineTrack Beta v15'};}
+function feedbackText(p){return `VineTrack Beta v15 feedback\nMost useful: ${p.useful||'-'}\nMissing/confusing: ${p.missing||'-'}\nWorth paying for: ${p.worthPaying||'-'}\nWould pay: ${p.wouldPay||'-'}\nRecommend (0-10): ${p.recommend||'-'}\nEmail: ${p.email||'-'}\nDate: ${p.at}`;}
 async function saveFeedbackLocal(e){e.preventDefault();const p=feedbackPayload();const all=JSON.parse(localStorage.getItem(FEEDBACK_KEY)||'[]');all.push(p);localStorage.setItem(FEEDBACK_KEY,JSON.stringify(all));$('feedbackMessage').textContent='Saving feedback…';try{const r=await fetch('/api/feedback',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});if(!r.ok)throw new Error('feedback endpoint unavailable');$('feedbackMessage').textContent='Thank you — your feedback was sent and also saved locally.';}catch{$('feedbackMessage').textContent='Feedback is saved locally, but this copy of VineTrack is not connected to the hosted feedback collector. Use Copy or Download to share it.';}}
 async function copyFeedbackLocal(){const p=feedbackPayload();try{await navigator.clipboard.writeText(feedbackText(p));$('feedbackMessage').textContent='Feedback copied. Paste it into WhatsApp, email, or your preferred message.';}catch{$('feedbackMessage').textContent='Clipboard access was blocked. Use Download feedback instead.';}}
 function downloadFeedbackLocal(){const p=feedbackPayload(),blob=new Blob([JSON.stringify(p,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=`vinetrack-feedback-${new Date().toISOString().slice(0,10)}.json`;a.click();URL.revokeObjectURL(a.href);$('feedbackMessage').textContent='Feedback downloaded.';}
@@ -435,7 +467,7 @@ const v10RenderProducts=renderProducts;renderProducts=function(){v10RenderProduc
 
 
 
-// VineTrack v14 — Chrome extension Amazon Vine sync
+// VineTrack v15 — Chrome extension Amazon Vine sync
 let pendingSyncBatches=[];
 function syncText(id,text){const el=$(id);if(el)el.textContent=text;}
 function extractAsinFromLink(link){const m=String(link||'').match(/\/(?:dp|gp\/product)\/([A-Z0-9]{10})(?:[/?#]|$)/i);return m?m[1].toUpperCase():'';}

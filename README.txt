@@ -1,4 +1,4 @@
-VineTrack Beta v14 — Railway + Chrome Web Store Edition
+VineTrack Beta v15 — Railway + Chrome Web Store Edition
 ========================================================
 
 WHAT CHANGED IN V14
@@ -33,15 +33,15 @@ SERVER-SIDE EXTENSION AUTH
 - VineTrack returns a high-entropy extension token to Chrome's chromiumapp.org redirect URL.
 - Only a SHA-256 hash of the token is stored server-side.
 - Connections can be revoked from VineTrack or from the extension.
-- The old v13 sync-code API remains server-side only for backward compatibility, but it is removed from the v14 UI.
+- The old v13 sync-code API remains server-side only for backward compatibility, but it is removed from the v15 UI.
 
 CHROME WEB STORE FILE
 ---------------------
 Use this ZIP for Chrome Web Store submission:
-  VineTrack_Sync_Chrome_Extension_v14_Store.zip
+  VineTrack_Sync_Chrome_Extension_v15_Store.zip
 
 The extension source is also included in:
-  chrome_extension_v14/
+  chrome_extension_v15/ (v15-compatible source)/
 
 AFTER GOOGLE ASSIGNS THE EXTENSION ID AND LISTING URL
 -----------------------------------------------------
@@ -69,7 +69,7 @@ Run command is already handled by Dockerfile/Procfile.
 
 IMPORTANT BETA LIMITATION
 -------------------------
-VineTrack accounts and extension authorization are server-side, but product/testing/review records remain browser-local in Beta v14. Therefore the extension opens VineTrack in the same Chrome profile after a sync so the pending batch can be imported into that browser-local workspace.
+VineTrack accounts and extension authorization are server-side, but product/testing/review records remain browser-local in Beta v15. Therefore the extension opens VineTrack in the same Chrome profile after a sync so the pending batch can be imported into that browser-local workspace.
 
 BACKUPS
 -------

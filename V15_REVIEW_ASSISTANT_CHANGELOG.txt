@@ -1,0 +1,13 @@
+VineTrack Beta v15 — Review Assistant UI update
+
+- Rebuilt Review Assistant as a focused 4-step flow: Test → Observe → Draft → Finish.
+- Removed dashboard-style clutter from the Review Assistant.
+- Kept testing checklist visible; moved photo checklist and listing prompts into an expandable details section.
+- Reduced the main observation area to three questions: what was tested, what worked, what could improve.
+- Moved rating, tone, length, audience and listing accuracy into Optional review preferences.
+- Kept draft metrics compact and added a clear Save & mark ready action.
+- Moved lifecycle history, rejection notes and generated-vs-final comparison into History & advanced details.
+- Added progress states across the four steps.
+- Added Save & next product.
+- Preserved all underlying v14 review data and workflows.
+- Bumped visible app version to Beta v15 and Chrome companion package to 1.1.1.

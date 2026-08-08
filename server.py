@@ -372,12 +372,12 @@ class Handler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
         if path == '/health':
-            return self._json(200, {'status': 'ok', 'app': 'VineTrack Beta v14', 'auth': 'enabled', 'vine_sync': 'chrome-extension'})
+            return self._json(200, {'status': 'ok', 'app': 'VineTrack Beta v15', 'auth': 'enabled', 'vine_sync': 'chrome-extension'})
         if path == '/api/auth/me':
             user = self._current_user()
             return self._json(200, {'authenticated': bool(user), 'user': user})
         if path == '/api/app-config':
-            return self._json(200, {'app': 'VineTrack Beta v14', 'chrome_store_url': CHROME_STORE_URL, 'extension_id_locked': bool(ALLOWED_EXTENSION_IDS)})
+            return self._json(200, {'app': 'VineTrack Beta v15', 'chrome_store_url': CHROME_STORE_URL, 'extension_id_locked': bool(ALLOWED_EXTENSION_IDS)})
         if path == '/extension/connect':
             return self._serve_extension_connect(parsed)
         if path == '/api/extension/me':
@@ -626,7 +626,7 @@ class Handler(SimpleHTTPRequestHandler):
 if __name__ == '__main__':
     init_db()
     os.chdir(ROOT)
-    print(f'VineTrack Beta v14 running on 0.0.0.0:{PORT}')
+    print(f'VineTrack Beta v15 running on 0.0.0.0:{PORT}')
     print(f'Database: {DB_FILE}')
     print(f'Feedback file: {FEEDBACK_FILE}')
     ThreadingHTTPServer(('0.0.0.0', PORT), Handler).serve_forever()

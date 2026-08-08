@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>VineTrack Beta v14</title>
+  <title>VineTrack Beta v15</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body data-user-id="__USER_ID__">
@@ -30,7 +30,7 @@
         <div class="account-copy"><strong id="accountName">VineTrack user</strong><span id="accountEmail">Signed in</span></div>
         <button id="logoutBtn" class="account-logout" type="button" title="Sign out">Sign out</button>
       </div>
-      <div class="sidebar-footer"><strong>Beta v14</strong><br>Private organiser for Vine reviewers</div>
+      <div class="sidebar-footer"><strong>Beta v15</strong><br>Private organiser for Vine reviewers</div>
     </aside>
 
     <main class="main-content">
@@ -127,7 +127,7 @@
       <section id="sync" class="view">
         <div class="panel form-panel sync-hero">
           <div class="panel-header">
-            <div><span class="eyebrow">New in Beta v14</span><h2>Amazon Vine Sync</h2><p class="muted">A normal Chrome extension experience: install once, connect once, then sync the Vine items visible on your current Amazon page with one click.</p></div>
+            <div><span class="eyebrow">New in Beta v15</span><h2>Amazon Vine Sync</h2><p class="muted">A normal Chrome extension experience: install once, connect once, then sync the Vine items visible on your current Amazon page with one click.</p></div>
             <span id="syncConnectionBadge" class="status-pill">Checking…</span>
           </div>
           <div class="privacy-card sync-trust"><strong>Privacy first</strong><div class="privacy-grid"><span>✓ No Amazon password shared</span><span>✓ No background scraping</span><span>✓ No automatic review posting</span><span>✓ You choose when to sync</span></div></div>
@@ -149,7 +149,7 @@
             <div id="syncPendingList" class="sync-pending-list"></div>
             <div class="form-actions"><button id="importSyncedItems" class="primary-btn" type="button" disabled>Import pending items</button></div>
           </div>
-          <div class="notice">VineTrack v14 only receives item details after the user clicks Sync in the Chrome extension. Amazon status text is reference information only and does not automatically change your review lifecycle.</div>
+          <div class="notice">VineTrack v15 only receives item details after the user clicks Sync in the Chrome extension. Amazon status text is reference information only and does not automatically change your review lifecycle.</div>
         </div>
       </section>
 
@@ -191,65 +191,116 @@
       </section>
 
       <section id="review" class="view">
-        <div class="review-layout">
-          <div class="panel form-panel">
-            <h2>Review Draft Assistant</h2>
-            <p class="muted">Create a draft only from your genuine testing notes. Check every statement before using it.</p>
-            <label>Select saved product<select id="reviewProduct"><option value="">Choose a product</option></select></label>
-            <div class="review-prep-grid">
-              <div class="subpanel">
-                <div class="panel-header"><h3>Category testing pack <span class="plus-badge">Plus preview</span></h3><span id="testingProgress" class="status-pill">0/0</span></div>
-                <div id="testingChecklistUI" class="checklist muted">Select a product to load its testing checklist.</div>
+        <div class="review-assistant-shell">
+          <div class="panel review-guide-panel">
+            <div class="review-guide-header">
+              <div>
+                <span class="eyebrow">Focused workflow</span>
+                <h2>Review Assistant</h2>
+                <p class="muted">Work through one product at a time: test, observe, draft, finish.</p>
               </div>
-              <div class="subpanel">
-                <div class="panel-header"><h3>Photo & evidence checklist</h3><span id="photoProgress" class="status-pill">0/0</span></div>
-                <div id="photoChecklistUI" class="checklist muted">Select a product to load its photo checklist.</div>
-              </div>
+              <span class="status-pill">Beta v15</span>
             </div>
-            <label>Listing title and key features<textarea id="reviewListing" rows="5" placeholder="Paste the Amazon listing title and bullet points here. Example: Rechargeable desk lamp; 3 brightness levels; touch control; foldable design; USB-C charging."></textarea></label>
-            <div class="form-actions compact-actions"><button id="prepareFromListing" class="secondary-btn" type="button">Prepare testing fields from listing</button></div>
-            <p class="muted">This creates neutral testing prompts from the seller's claims. It does not treat listing claims as your experience.</p>
-            <div class="form-grid">
-              <label>Your rating<select id="reviewRating"><option value="">Not selected</option><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></label>
-              <label>Length<select id="reviewLength"><option value="short">Short</option><option value="standard" selected>Standard</option><option value="detailed">Detailed</option></select></label>
-              <label>Tone<select id="reviewTone"><option value="neutral">Neutral</option><option value="friendly">Friendly</option><option value="concise">Concise</option></select></label>
-              <label>Who is it suitable for?<input id="reviewAudience" placeholder="Example: home-office users, families, beginners, travellers" /></label>
-            </div>
-            <label>What did you test?<textarea id="reviewTested" rows="3" placeholder="Example: I used it for five days at home and tested the setup, main features, comfort, durability and cleaning."></textarea></label>
-            <label>What worked well?<textarea id="reviewPros" rows="3" placeholder="Example: Easy to set up; felt sturdy; performed as described; simple to clean."></textarea></label>
-            <label>What could be improved?<textarea id="reviewCons" rows="3" placeholder="Example: Instructions could be clearer; cable was shorter than expected; packaging was basic."></textarea></label>
-            <label>Was the listing accurate?<textarea id="reviewAccuracy" rows="2" placeholder="Example: Yes, the size, colour and main features matched the listing. Mention any difference you personally noticed."></textarea></label>
-            <div class="form-actions"><button id="generateReview" class="primary-btn" type="button">Generate review draft</button></div>
-          </div>
 
-          <div class="panel output-panel">
-            <div class="panel-header"><h2>Draft output</h2><span class="status-pill">Editable</span></div>
-            <label>Suggested title<input id="reviewTitleOutput" placeholder="A concise, product-specific title will appear here and remain editable" /></label>
-            <label>Review draft<textarea id="reviewOutput" rows="16" placeholder="Your review draft will appear here"></textarea></label>
-            <div class="review-metrics">
-              <div><span>Words</span><strong id="wordCount">0</strong></div>
-              <div><span>Characters</span><strong id="charCount">0</strong></div>
-              <div><span>Reading time</span><strong id="readingTime">0 min</strong></div>
-              <div><span>Readiness</span><strong id="qualityScore">0/100</strong></div>
-            </div>
-            <div id="qualityTips" class="quality-tips muted">Add genuine testing details to see the quality check.</div>
-            <div class="comparison-box"><div class="panel-header"><h3>Draft editing comparison</h3><span id="editPercent" class="status-pill">0% changed</span></div><p class="muted">VineTrack compares the generated draft with your final edited review.</p><div class="comparison-grid"><div><strong>Original generated draft</strong><textarea id="originalDraft" rows="7" readonly placeholder="Generate a review to preserve the original draft"></textarea></div><div><strong>Final edited review</strong><textarea id="finalReviewMirror" rows="7" readonly placeholder="Your edited review appears here"></textarea></div></div></div>
+            <label class="review-product-picker">Product<select id="reviewProduct"><option value="">Choose a product</option></select></label>
+            <div id="reviewProductSummary" class="review-product-summary muted">Choose a product to begin.</div>
 
-            <div class="lifecycle-box">
-              <div class="panel-header"><h3>Review lifecycle <span class="plus-badge">Plus preview</span></h3><span id="lifecycleUpdated" class="muted small-note"></span></div>
-              <div class="form-grid lifecycle-controls">
-                <label>Current stage<select id="reviewLifecycle"><option value="Draft ready">Draft ready</option><option value="Submitted">Submitted</option><option value="Pending approval">Pending approval</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option><option value="Needs resubmission">Needs resubmission</option></select></label>
-                <label>Stage note<input id="reviewStatusNote" placeholder="Optional: rejection reason, change made, approval note"></label>
-              </div>
-              <div class="form-actions"><button id="saveLifecycle" class="secondary-btn" type="button">Save lifecycle update</button></div>
-              <div id="reviewHistoryList" class="history-list muted">No review history yet.</div>
+            <div id="reviewStepNav" class="review-stepper" aria-label="Review progress">
+              <div class="review-step" data-review-step="test"><span>1</span><strong>Test</strong></div>
+              <div class="review-step" data-review-step="observe"><span>2</span><strong>Observe</strong></div>
+              <div class="review-step" data-review-step="draft"><span>3</span><strong>Draft</strong></div>
+              <div class="review-step" data-review-step="finish"><span>4</span><strong>Finish</strong></div>
             </div>
-            <div class="notice">Important: This tool must not invent experiences, choose your rating, or hide disadvantages. Edit the draft so it accurately reflects your own experience.</div>
-            <div class="form-actions workflow-actions"><button id="copyTitle" class="secondary-btn" type="button">Copy title</button><button id="copyReview" class="secondary-btn" type="button">Copy full review</button><button id="openAmazonReview" class="secondary-btn" type="button" disabled>Open Amazon</button><button id="markSubmitted" class="primary-btn" type="button">Mark submitted</button><button id="saveReview" class="secondary-btn" type="button">Save draft</button></div>
+
+            <section class="review-focus-card" data-focus-step="test">
+              <div class="review-focus-head">
+                <div><span class="step-kicker">Step 1</span><h3>Test the product</h3><p class="muted">Tick off the checks that matter for this item.</p></div>
+                <span id="testingProgress" class="status-pill">0/0</span>
+              </div>
+              <div id="testingChecklistUI" class="checklist muted">Select a product to load its testing checklist.</div>
+              <details class="review-details">
+                <summary>Testing details & photos</summary>
+                <div class="review-details-body">
+                  <label>Listing title and key features<textarea id="reviewListing" rows="4" placeholder="Optional: paste the listing title and key feature bullets to create neutral testing prompts."></textarea></label>
+                  <div class="form-actions compact-actions"><button id="prepareFromListing" class="secondary-btn" type="button">Prepare testing prompts</button></div>
+                  <p class="muted small-note">Listing claims are prompts only. Replace them with your own observations.</p>
+                  <div class="subpanel compact-subpanel">
+                    <div class="panel-header"><h3>Photo & evidence checklist</h3><span id="photoProgress" class="status-pill">0/0</span></div>
+                    <div id="photoChecklistUI" class="checklist muted">Select a product to load its photo checklist.</div>
+                  </div>
+                </div>
+              </details>
+            </section>
+
+            <section class="review-focus-card" data-focus-step="observe">
+              <div class="review-focus-head"><div><span class="step-kicker">Step 2</span><h3>Add your observations</h3><p class="muted">Only record what you personally tested or noticed.</p></div></div>
+              <label>What did you test?<textarea id="reviewTested" rows="3" placeholder="Example: Used it for five days and checked setup, performance, comfort and cleaning."></textarea></label>
+              <label>What worked well?<textarea id="reviewPros" rows="3" placeholder="Add specific positives from your own use."></textarea></label>
+              <label>What could be improved?<textarea id="reviewCons" rows="3" placeholder="Add genuine limitations or differences you noticed."></textarea></label>
+              <details class="review-details">
+                <summary>Optional review preferences</summary>
+                <div class="review-details-body">
+                  <div class="form-grid">
+                    <label>Your rating<select id="reviewRating"><option value="">Not selected</option><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></label>
+                    <label>Length<select id="reviewLength"><option value="short">Short</option><option value="standard" selected>Standard</option><option value="detailed">Detailed</option></select></label>
+                    <label>Tone<select id="reviewTone"><option value="neutral">Neutral</option><option value="friendly">Friendly</option><option value="concise">Concise</option></select></label>
+                    <label>Who is it suitable for?<input id="reviewAudience" placeholder="Example: home-office users, families, beginners" /></label>
+                  </div>
+                  <label>Was the listing accurate?<textarea id="reviewAccuracy" rows="2" placeholder="Mention only differences or matches you personally observed."></textarea></label>
+                </div>
+              </details>
+            </section>
+
+            <section class="review-focus-card" data-focus-step="draft">
+              <div class="review-focus-head">
+                <div><span class="step-kicker">Step 3</span><h3>Create and edit your draft</h3><p class="muted">VineTrack uses only the observations you entered above.</p></div>
+                <button id="generateReview" class="primary-btn" type="button">Generate draft</button>
+              </div>
+              <label>Suggested title<input id="reviewTitleOutput" placeholder="Editable title" /></label>
+              <label>Review draft<textarea id="reviewOutput" rows="12" placeholder="Your review draft will appear here"></textarea></label>
+              <div class="review-metrics compact-review-metrics">
+                <div><span>Words</span><strong id="wordCount">0</strong></div>
+                <div><span>Characters</span><strong id="charCount">0</strong></div>
+                <div><span>Reading time</span><strong id="readingTime">0 min</strong></div>
+                <div><span>Readiness</span><strong id="qualityScore">0/100</strong></div>
+              </div>
+              <div id="qualityTips" class="quality-tips muted">Add genuine testing details to see the quality check.</div>
+              <div class="form-actions review-primary-actions"><button id="saveReview" class="secondary-btn" type="button">Save & mark ready</button></div>
+            </section>
+
+            <section class="review-focus-card finish-card" data-focus-step="finish">
+              <div class="review-focus-head"><div><span class="step-kicker">Step 4</span><h3>Finish</h3><p class="muted">Copy your final wording, open Amazon if needed, then update VineTrack after you submit.</p></div></div>
+              <div class="notice">Check every statement before using it. VineTrack must not invent experiences, choose your rating, or hide disadvantages.</div>
+              <div class="form-actions workflow-actions simplified-actions">
+                <button id="copyReview" class="secondary-btn" type="button">Copy review</button>
+                <button id="openAmazonReview" class="secondary-btn" type="button" disabled>Open Amazon</button>
+                <button id="markSubmitted" class="primary-btn" type="button">Mark submitted</button>
+                <button id="reviewNextProduct" class="secondary-btn" type="button">Save & next product</button>
+              </div>
+              <details class="review-details advanced-details">
+                <summary>History & advanced details</summary>
+                <div class="review-details-body">
+                  <div class="lifecycle-box compact-lifecycle">
+                    <div class="panel-header"><h3>Review lifecycle <span class="plus-badge">Plus preview</span></h3><span id="lifecycleUpdated" class="muted small-note"></span></div>
+                    <div class="form-grid lifecycle-controls">
+                      <label>Current stage<select id="reviewLifecycle"><option value="Draft ready">Draft ready</option><option value="Submitted">Submitted</option><option value="Pending approval">Pending approval</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option><option value="Needs resubmission">Needs resubmission</option></select></label>
+                      <label>Stage note<input id="reviewStatusNote" placeholder="Optional: rejection reason, change made, approval note"></label>
+                    </div>
+                    <div class="form-actions"><button id="saveLifecycle" class="secondary-btn" type="button">Save lifecycle update</button></div>
+                    <div id="reviewHistoryList" class="history-list muted">No review history yet.</div>
+                  </div>
+
+                  <div class="comparison-box compact-comparison">
+                    <div class="panel-header"><h3>Draft editing comparison</h3><span id="editPercent" class="status-pill">0% changed</span></div>
+                    <div class="comparison-grid"><div><strong>Original generated draft</strong><textarea id="originalDraft" rows="6" readonly placeholder="Generate a review to preserve the original draft"></textarea></div><div><strong>Final edited review</strong><textarea id="finalReviewMirror" rows="6" readonly placeholder="Your edited review appears here"></textarea></div></div>
+                  </div>
+                  <div class="form-actions"><button id="copyTitle" class="secondary-btn" type="button">Copy title</button></div>
+                </div>
+              </details>
+            </section>
           </div>
         </div>
       </section>
-
 
 
       <section id="session" class="view">

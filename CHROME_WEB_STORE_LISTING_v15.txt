@@ -1,0 +1,31 @@
+VineTrack Sync — Chrome Web Store listing draft
+
+Name
+VineTrack Sync
+
+Short description
+Sync visible Amazon Vine items into your VineTrack account with an explicit click. No Amazon password required.
+
+Detailed description
+VineTrack Sync is the optional Chrome extension for VineTrack. It helps Vine reviewers move visible product details from their Amazon Vine Orders or Reviews page into their private VineTrack workflow.
+
+How it works:
+• Sign in to VineTrack.
+• Connect the extension once.
+• Open an Amazon Vine Orders or Reviews page.
+• Click “Sync My Vine Items”.
+• VineTrack opens and imports the synced batch.
+
+Privacy and review integrity:
+• The extension does not ask for or store your Amazon password.
+• It does not run background scraping.
+• It reads visible item details only after you click Sync.
+• It does not choose star ratings.
+• It does not submit Amazon reviews.
+• VineTrack review drafts remain based on your own testing notes and observations.
+
+Suggested category
+Productivity
+
+Single purpose
+User-triggered transfer of visible Amazon Vine item details into the user's VineTrack account.

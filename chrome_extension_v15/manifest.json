@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "VineTrack Sync",
+  "version": "1.1.1",
+  "description": "Sync visible Amazon Vine items into your VineTrack account with an explicit click. No Amazon password required.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "identity"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://localhost/*"
+  ],
+  "action": {
+    "default_title": "VineTrack Sync",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}
