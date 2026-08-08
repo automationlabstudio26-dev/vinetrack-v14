@@ -6,6 +6,8 @@ Uses only Python's standard library so it can deploy on Railway without extra pa
 from http.server import ThreadingHTTPServer, SimpleHTTPRequestHandler
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs, quote, urlencode
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 from datetime import datetime, timezone, timedelta
 from http.cookies import SimpleCookie
 import base64
@@ -24,6 +26,13 @@ DB_FILE = Path(os.environ.get('VINETRACK_DB_FILE', str(ROOT / 'data' / 'vinetrac
 ADMIN_KEY = os.environ.get('VINETRACK_ADMIN_KEY', '')
 CHROME_STORE_URL = os.environ.get('VINETRACK_CHROME_STORE_URL', '').strip()
 ALLOWED_EXTENSION_IDS = {x.strip().lower() for x in os.environ.get('VINETRACK_EXTENSION_IDS', '').split(',') if x.strip()}
+AMAZON_CLIENT_ID = os.environ.get('VINETRACK_AMAZON_CLIENT_ID', '').strip()
+AMAZON_CLIENT_SECRET = os.environ.get('VINETRACK_AMAZON_CLIENT_SECRET', '').strip()
+AMAZON_REDIRECT_URI = os.environ.get('VINETRACK_AMAZON_REDIRECT_URI', '').strip()
+AMAZON_AUTHORIZE_URL = 'https://www.amazon.com/ap/oa'
+AMAZON_TOKEN_URL = 'https://api.amazon.com/auth/o2/token'
+AMAZON_PROFILE_URL = 'https://api.amazon.com/user/profile'
+OAUTH_STATE_MINUTES = 10
 MAX_BODY = 256 * 1024
 SESSION_DAYS = 30
 COOKIE_NAME = 'vinetrack_session'
@@ -67,6 +76,11 @@ def init_db():
             db.execute('ALTER TABLE users ADD COLUMN sync_token_hash TEXT')
         if 'sync_token_created_at' not in cols:
             db.execute('ALTER TABLE users ADD COLUMN sync_token_created_at TEXT')
+        if 'amazon_user_id' not in cols:
+            db.execute('ALTER TABLE users ADD COLUMN amazon_user_id TEXT')
+        if 'auth_provider' not in cols:
+            db.execute("ALTER TABLE users ADD COLUMN auth_provider TEXT NOT NULL DEFAULT 'password'")
+        db.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_amazon_user_id ON users(amazon_user_id) WHERE amazon_user_id IS NOT NULL')
         db.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_users_sync_token_hash ON users(sync_token_hash) WHERE sync_token_hash IS NOT NULL')
         db.execute('''
             CREATE TABLE IF NOT EXISTS vine_imports (
@@ -94,6 +108,15 @@ def init_db():
         ''')
         db.execute('CREATE INDEX IF NOT EXISTS idx_extension_tokens_user ON extension_tokens(user_id, revoked_at, id)')
         db.execute('CREATE INDEX IF NOT EXISTS idx_extension_tokens_ext ON extension_tokens(extension_id, revoked_at, id)')
+        db.execute('''
+            CREATE TABLE IF NOT EXISTS oauth_states (
+                state_hash TEXT PRIMARY KEY,
+                next_path TEXT NOT NULL,
+                created_at TEXT NOT NULL,
+                expires_at TEXT NOT NULL
+            )
+        ''')
+        db.execute('DELETE FROM oauth_states WHERE expires_at < ?', (utcnow().isoformat(),))
         db.execute('DELETE FROM sessions WHERE expires_at < ?', (utcnow().isoformat(),))
         db.commit()
 
@@ -199,6 +222,50 @@ def login_clear_failures(key):
     LOGIN_FAILURES.pop(key, None)
 
 
+def safe_next_path(value):
+    value = str(value or '/app.html').strip()
+    if not value.startswith('/') or value.startswith('//'):
+        return '/app.html'
+    return value[:1200]
+
+
+def amazon_auth_configured():
+    return bool(AMAZON_CLIENT_ID and AMAZON_CLIENT_SECRET and AMAZON_REDIRECT_URI)
+
+
+def amazon_post_form(url, fields):
+    body = urlencode(fields).encode('utf-8')
+    req = Request(url, data=body, headers={
+        'Content-Type': 'application/x-www-form-urlencoded',
+        'Accept': 'application/json',
+        'User-Agent': 'VineTrack/16.0',
+    }, method='POST')
+    try:
+        with urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read().decode('utf-8'))
+    except HTTPError as exc:
+        detail = exc.read().decode('utf-8', 'replace')[:1000]
+        raise RuntimeError(f'Amazon token exchange failed ({exc.code}): {detail}') from exc
+    except (URLError, TimeoutError) as exc:
+        raise RuntimeError('Could not reach Amazon sign-in service.') from exc
+
+
+def amazon_get_profile(access_token):
+    req = Request(AMAZON_PROFILE_URL, headers={
+        'Authorization': f'Bearer {access_token}',
+        'Accept': 'application/json',
+        'User-Agent': 'VineTrack/16.0',
+    })
+    try:
+        with urlopen(req, timeout=15) as resp:
+            return json.loads(resp.read().decode('utf-8'))
+    except HTTPError as exc:
+        detail = exc.read().decode('utf-8', 'replace')[:1000]
+        raise RuntimeError(f'Amazon profile request failed ({exc.code}): {detail}') from exc
+    except (URLError, TimeoutError) as exc:
+        raise RuntimeError('Could not retrieve the Amazon account profile.') from exc
+
+
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, directory=str(ROOT), **kwargs)
@@ -261,13 +328,13 @@ class Handler(SimpleHTTPRequestHandler):
         now = utcnow().isoformat()
         with sqlite3.connect(DB_FILE) as db:
             row = db.execute('''
-                SELECT u.id, u.name, u.email, s.expires_at
+                SELECT u.id, u.name, u.email, u.auth_provider, s.expires_at
                 FROM sessions s JOIN users u ON u.id=s.user_id
                 WHERE s.token_hash=? AND s.expires_at>?
             ''', (token_hash(token), now)).fetchone()
         if not row:
             return None
-        return {'id': row[0], 'name': row[1], 'email': row[2]}
+        return {'id': row[0], 'name': row[1], 'email': row[2], 'auth_provider': row[3]}
 
     def _cookie_header(self, token, max_age=None):
         secure = self.headers.get('X-Forwarded-Proto', '').lower() == 'https'
@@ -315,6 +382,100 @@ class Handler(SimpleHTTPRequestHandler):
         if not row:
             return None
         return {'token_id': row[0], 'user_id': row[1], 'extension_id': row[2], 'created_at': row[3], 'last_used_at': now if touch else row[4], 'name': row[5], 'email': row[6]}
+
+    def _serve_amazon_start(self, parsed):
+        if not amazon_auth_configured():
+            html = """<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Amazon sign-in setup · VineTrack</title><link rel="stylesheet" href="login.css"></head><body><main style="max-width:680px;margin:70px auto;padding:28px;font-family:Inter,system-ui,sans-serif"><h1>Amazon sign-in is not configured yet</h1><p>VineTrack Beta v16 is ready for Login with Amazon, but the Railway service still needs the Amazon client ID, client secret and callback URL.</p><p>Add <code>VINETRACK_AMAZON_CLIENT_ID</code>, <code>VINETRACK_AMAZON_CLIENT_SECRET</code> and <code>VINETRACK_AMAZON_REDIRECT_URI</code> in Railway, then redeploy.</p><p><a href="/login.html">Back to sign in</a></p></main></body></html>"""
+            return self._html(503, html)
+        params = parse_qs(parsed.query)
+        next_path = safe_next_path((params.get('next') or ['/app.html'])[0])
+        state = secrets.token_urlsafe(32)
+        now = utcnow()
+        expires = now + timedelta(minutes=OAUTH_STATE_MINUTES)
+        with sqlite3.connect(DB_FILE) as db:
+            db.execute('DELETE FROM oauth_states WHERE expires_at < ?', (now.isoformat(),))
+            db.execute('INSERT INTO oauth_states(state_hash,next_path,created_at,expires_at) VALUES(?,?,?,?)',
+                       (token_hash(state), next_path, now.isoformat(), expires.isoformat()))
+            db.commit()
+        auth_url = AMAZON_AUTHORIZE_URL + '?' + urlencode({
+            'client_id': AMAZON_CLIENT_ID,
+            'scope': 'profile',
+            'response_type': 'code',
+            'redirect_uri': AMAZON_REDIRECT_URI,
+            'state': state,
+        })
+        return self._redirect(auth_url)
+
+    def _serve_amazon_callback(self, parsed):
+        params = parse_qs(parsed.query)
+        error = (params.get('error') or [''])[0]
+        if error:
+            description = re.sub(r'[^a-zA-Z0-9 .,_-]', '', (params.get('error_description') or ['Amazon sign-in was cancelled.'])[0])[:300]
+            return self._redirect('/login.html?amazon_error=' + quote(description))
+        state = (params.get('state') or [''])[0]
+        code = (params.get('code') or [''])[0]
+        if not state or not code:
+            return self._redirect('/login.html?amazon_error=' + quote('Amazon sign-in did not return the information VineTrack expected.'))
+        now = utcnow().isoformat()
+        with sqlite3.connect(DB_FILE) as db:
+            state_row = db.execute('SELECT next_path,expires_at FROM oauth_states WHERE state_hash=?', (token_hash(state),)).fetchone()
+            db.execute('DELETE FROM oauth_states WHERE state_hash=?', (token_hash(state),))
+            db.commit()
+        if not state_row or state_row[1] <= now:
+            return self._redirect('/login.html?amazon_error=' + quote('Your Amazon sign-in session expired. Please try again.'))
+        oauth_next_path = state_row[0]
+        try:
+            token_data = amazon_post_form(AMAZON_TOKEN_URL, {
+                'grant_type': 'authorization_code',
+                'code': code,
+                'client_id': AMAZON_CLIENT_ID,
+                'client_secret': AMAZON_CLIENT_SECRET,
+                'redirect_uri': AMAZON_REDIRECT_URI,
+            })
+            access_token = str(token_data.get('access_token', '')).strip()
+            if not access_token:
+                raise RuntimeError('Amazon did not return an access token.')
+            profile = amazon_get_profile(access_token)
+        except RuntimeError:
+            return self._redirect('/login.html?amazon_error=' + quote('Amazon sign-in could not be completed. Please try again.'))
+
+        amazon_user_id = str(profile.get('user_id') or profile.get('userId') or '').strip()[:255]
+        email = str(profile.get('email') or '').strip().lower()[:254]
+        name = re.sub(r'\s+', ' ', str(profile.get('name') or '').strip())[:80]
+        if not amazon_user_id or not EMAIL_RE.match(email):
+            return self._redirect('/login.html?amazon_error=' + quote('Amazon did not provide the profile details VineTrack needs.'))
+        if not name:
+            name = email.split('@', 1)[0][:80] or 'Vine reviewer'
+
+        created = utcnow().isoformat()
+        with sqlite3.connect(DB_FILE) as db:
+            row_by_amazon = db.execute('SELECT id FROM users WHERE amazon_user_id=?', (amazon_user_id,)).fetchone()
+            if row_by_amazon:
+                user_id = row_by_amazon[0]
+                try:
+                    db.execute("UPDATE users SET name=?, email=?, auth_provider='amazon' WHERE id=?", (name, email, user_id))
+                except sqlite3.IntegrityError:
+                    return self._redirect('/login.html?amazon_error=' + quote('That Amazon email is already used by another VineTrack account.'))
+            else:
+                row_by_email = db.execute('SELECT id,amazon_user_id FROM users WHERE email=?', (email,)).fetchone()
+                if row_by_email:
+                    if row_by_email[1] and row_by_email[1] != amazon_user_id:
+                        return self._redirect('/login.html?amazon_error=' + quote('This email is already linked to a different Amazon account.'))
+                    user_id = row_by_email[0]
+                    db.execute("UPDATE users SET amazon_user_id=?, auth_provider='amazon', name=? WHERE id=?", (amazon_user_id, name, user_id))
+                else:
+                    placeholder_hash = 'amazon_oauth_only$' + secrets.token_urlsafe(32)
+                    cur = db.execute('INSERT INTO users(name,email,password_hash,created_at,amazon_user_id,auth_provider) VALUES(?,?,?,?,?,?)',
+                                     (name, email, placeholder_hash, created, amazon_user_id, 'amazon'))
+                    user_id = cur.lastrowid
+            db.commit()
+        session_token = self._create_session(user_id)
+        self.send_response(302)
+        self.send_header('Location', safe_next_path(oauth_next_path))
+        self.send_header('Cache-Control', 'no-store')
+        self.send_header('Set-Cookie', self._cookie_header(session_token, SESSION_DAYS * 86400))
+        self.end_headers()
+        return
 
     def _serve_extension_connect(self, parsed):
         params = parse_qs(parsed.query)
@@ -372,12 +533,16 @@ class Handler(SimpleHTTPRequestHandler):
         parsed = urlparse(self.path)
         path = parsed.path
         if path == '/health':
-            return self._json(200, {'status': 'ok', 'app': 'VineTrack Beta v15', 'auth': 'enabled', 'vine_sync': 'chrome-extension'})
+            return self._json(200, {'status': 'ok', 'app': 'VineTrack Beta v16', 'auth': 'amazon', 'amazon_signin_configured': amazon_auth_configured(), 'vine_sync': 'chrome-extension'})
+        if path == '/auth/amazon':
+            return self._serve_amazon_start(parsed)
+        if path == '/auth/amazon/callback':
+            return self._serve_amazon_callback(parsed)
         if path == '/api/auth/me':
             user = self._current_user()
             return self._json(200, {'authenticated': bool(user), 'user': user})
         if path == '/api/app-config':
-            return self._json(200, {'app': 'VineTrack Beta v15', 'chrome_store_url': CHROME_STORE_URL, 'extension_id_locked': bool(ALLOWED_EXTENSION_IDS)})
+            return self._json(200, {'app': 'VineTrack Beta v16', 'chrome_store_url': CHROME_STORE_URL, 'extension_id_locked': bool(ALLOWED_EXTENSION_IDS), 'amazon_signin_configured': amazon_auth_configured()})
         if path == '/extension/connect':
             return self._serve_extension_connect(parsed)
         if path == '/api/extension/me':
@@ -433,32 +598,7 @@ class Handler(SimpleHTTPRequestHandler):
         path = urlparse(self.path).path
 
         if path == '/api/auth/register':
-            try:
-                payload = self._read_json()
-            except ValueError as exc:
-                return self._json(400, {'error': str(exc)})
-            name = str(payload.get('name', '')).strip()
-            email = str(payload.get('email', '')).strip().lower()
-            password = str(payload.get('password', ''))
-            if len(name) < 2 or len(name) > 80:
-                return self._json(400, {'error': 'Please enter your name.'})
-            if not EMAIL_RE.match(email) or len(email) > 254:
-                return self._json(400, {'error': 'Please enter a valid email address.'})
-            if len(password) < 8:
-                return self._json(400, {'error': 'Password must be at least 8 characters.'})
-            if len(password) > 256:
-                return self._json(400, {'error': 'Password is too long.'})
-            try:
-                with sqlite3.connect(DB_FILE) as db:
-                    cur = db.execute('INSERT INTO users(name,email,password_hash,created_at) VALUES(?,?,?,?)',
-                                     (name, email, hash_password(password), utcnow().isoformat()))
-                    user_id = cur.lastrowid
-                    db.commit()
-            except sqlite3.IntegrityError:
-                return self._json(409, {'error': 'An account with that email already exists.'})
-            token = self._create_session(user_id)
-            return self._json(201, {'ok': True, 'user': {'id': user_id, 'name': name, 'email': email}},
-                              {'Set-Cookie': self._cookie_header(token, SESSION_DAYS * 86400)})
+            return self._json(410, {'error': 'New VineTrack accounts are created by continuing with Amazon.'})
 
         if path == '/api/auth/login':
             try:
@@ -626,7 +766,7 @@ class Handler(SimpleHTTPRequestHandler):
 if __name__ == '__main__':
     init_db()
     os.chdir(ROOT)
-    print(f'VineTrack Beta v15 running on 0.0.0.0:{PORT}')
+    print(f'VineTrack Beta v16 running on 0.0.0.0:{PORT}')
     print(f'Database: {DB_FILE}')
     print(f'Feedback file: {FEEDBACK_FILE}')
     ThreadingHTTPServer(('0.0.0.0', PORT), Handler).serve_forever()

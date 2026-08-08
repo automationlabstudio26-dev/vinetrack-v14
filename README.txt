@@ -1,79 +1,84 @@
-VineTrack Beta v15 — Railway + Chrome Web Store Edition
-========================================================
+VineTrack Beta v16 — Amazon Sign-In + Chrome Sync
+==================================================
 
-WHAT CHANGED IN V14
+WHAT CHANGED IN V16
 -------------------
-V14 replaces the developer-mode Browser Companion flow with a Chrome Web Store-ready extension architecture.
+VineTrack no longer presents a separate Register/Create Account experience.
+The primary sign-in flow is now:
 
-End-user flow after the extension is published:
-1. Click Get Chrome extension in VineTrack.
-2. Click Add to Chrome in the Chrome Web Store.
-3. Keep VineTrack open and click the VineTrack Sync extension once.
-4. Click Connect VineTrack and approve the connection.
-5. Open Amazon Vine Orders or Reviews.
-6. Click Sync My Vine Items.
-7. VineTrack opens and imports the synced batch automatically.
+  Continue with Amazon -> Amazon confirms identity -> VineTrack opens
 
-There is no manual VineTrack URL entry and no sync code for end users.
+Use the same Amazon account that the reviewer uses for Amazon Vine.
+VineTrack never receives or stores the Amazon password.
 
-PRIVACY / SAFETY MODEL
-----------------------
-- VineTrack never asks for the Amazon password.
-- The extension reads visible Vine item details only after the user clicks Sync.
-- No background scraping is implemented.
-- No automatic review submission is implemented.
-- No automatic star rating selection is implemented.
-- Imported Amazon status text remains reference-only.
-
-SERVER-SIDE EXTENSION AUTH
---------------------------
-- Chrome uses chrome.identity.launchWebAuthFlow.
-- The user signs in to VineTrack normally if needed.
-- The user explicitly approves the extension connection.
-- VineTrack returns a high-entropy extension token to Chrome's chromiumapp.org redirect URL.
-- Only a SHA-256 hash of the token is stored server-side.
-- Connections can be revoked from VineTrack or from the extension.
-- The old v13 sync-code API remains server-side only for backward compatibility, but it is removed from the v15 UI.
-
-CHROME WEB STORE FILE
+IMPORTANT DISTINCTION
 ---------------------
-Use this ZIP for Chrome Web Store submission:
-  VineTrack_Sync_Chrome_Extension_v15_Store.zip
+Login with Amazon authenticates the person's Amazon identity. It does not by itself
+import Vine orders, review status or evaluation data. Vine item sync remains a separate,
+explicit action through the VineTrack Sync Chrome extension.
 
-The extension source is also included in:
-  chrome_extension_v15/ (v15-compatible source)/
+CUSTOMER FLOW
+-------------
+1. Open VineTrack.
+2. Click Continue with Amazon.
+3. Sign in/approve on Amazon.
+4. VineTrack creates or links the VineTrack account automatically.
+5. Install/connect VineTrack Sync once.
+6. Open Amazon Vine.
+7. Click Sync My Vine Items.
+8. Continue the review workflow in VineTrack.
 
-AFTER GOOGLE ASSIGNS THE EXTENSION ID AND LISTING URL
------------------------------------------------------
-Add these Railway variables:
-  VINETRACK_CHROME_STORE_URL=https://chromewebstore.google.com/detail/<your-listing>
-  VINETRACK_EXTENSION_IDS=<32-character Chrome extension ID>
+EXISTING V15 USERS
+------------------
+If an earlier VineTrack account used the same email address returned by Amazon,
+V16 links that account to the Amazon identity instead of creating a duplicate.
+The old password-login API remains server-side for compatibility, but no password
+registration/login form is shown in the normal customer UI.
 
-Then redeploy VineTrack.
+RAILWAY VARIABLES — EXISTING
+----------------------------
+VINETRACK_DB_FILE=/data/vinetrack.db
+VINETRACK_FEEDBACK_FILE=/data/feedback.jsonl
+VINETRACK_ADMIN_KEY=<your private admin key>
 
-VINETRACK_EXTENSION_IDS is deliberately optional during development. Once the Web Store assigns the real ID, setting it locks the connection endpoint to the published extension.
+RAILWAY VARIABLES — NEW FOR V16
+-------------------------------
+VINETRACK_AMAZON_CLIENT_ID=<Login with Amazon client ID>
+VINETRACK_AMAZON_CLIENT_SECRET=<Login with Amazon client secret>
+VINETRACK_AMAZON_REDIRECT_URI=https://YOUR-LIVE-DOMAIN/auth/amazon/callback
 
-Existing Railway variables remain:
-  VINETRACK_DB_FILE=/data/vinetrack.db
-  VINETRACK_FEEDBACK_FILE=/data/feedback.jsonl
-  VINETRACK_ADMIN_KEY=<private admin key>
+The redirect URI must match the Return URL configured for the Login with Amazon app.
+Keep the client secret only in Railway variables. Do not put it in GitHub or browser code.
 
-Persistent Railway volume mount:
+CHROME WEB STORE VARIABLES — AFTER PUBLICATION
+----------------------------------------------
+VINETRACK_CHROME_STORE_URL=https://chromewebstore.google.com/detail/<your-listing>
+VINETRACK_EXTENSION_IDS=<32-character Chrome extension ID>
+
+PERSISTENT STORAGE
+------------------
+Railway volume mount:
   /data
 
-RAILWAY
--------
-The repository root used by Railway must contain Dockerfile and server.py. If the GitHub repo contains this package inside a folder, set Railway Root Directory to that folder.
+CHROME EXTENSION FILE
+---------------------
+Chrome Web Store upload package:
+  VineTrack_Sync_Chrome_Extension_v16_Store.zip
 
-Run command is already handled by Dockerfile/Procfile.
+Extension source:
+  chrome_extension_v16/
 
-IMPORTANT BETA LIMITATION
--------------------------
-VineTrack accounts and extension authorization are server-side, but product/testing/review records remain browser-local in Beta v15. Therefore the extension opens VineTrack in the same Chrome profile after a sync so the pending batch can be imported into that browser-local workspace.
+BETA DATA MODEL
+---------------
+Account identity, sessions, extension authorization and sync inbox are server-side.
+Product/testing/review records remain browser-local during this beta.
 
-BACKUPS
--------
-- backups_v13_before_v14: v13 source before this upgrade
-- backups_v12_before_sync: v12 source before Amazon Sync
-- backups_v11_before_auth: v11 source before login/account work
-- backups_v10: original v10 backups
+SECURITY / REVIEW INTEGRITY
+---------------------------
+- Amazon password is handled by Amazon, not VineTrack.
+- OAuth state is short-lived and single-use.
+- VineTrack requests the basic Amazon profile scope for account identity.
+- Vine item details are synced only when the user explicitly clicks Sync.
+- No background Amazon scraping is included.
+- No automatic review submission is included.
+- No automatic star rating selection is included.

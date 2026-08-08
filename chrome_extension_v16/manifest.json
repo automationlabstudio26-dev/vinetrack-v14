@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "VineTrack Sync",
+  "version": "1.2.0",
+  "description": "Connect VineTrack to the Amazon account you use for Vine and sync visible Vine items only when you click Sync. No Amazon password is stored by VineTrack.",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "storage",
+    "identity"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://localhost/*"
+  ],
+  "action": {
+    "default_title": "VineTrack Sync",
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "32": "icons/icon32.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "32": "icons/icon32.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

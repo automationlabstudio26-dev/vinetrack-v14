@@ -1,0 +1,16 @@
+VineTrack Beta v16 — Amazon-first account access
+=================================================
+
+- Removed visible Register/Create Account tabs and password form.
+- Added one primary Continue with Amazon sign-in button.
+- Added server-side Login with Amazon OAuth authorization-code flow.
+- Added short-lived, single-use OAuth state records.
+- Added Amazon account ID linking to the existing users table.
+- Existing beta users are linked by matching verified Amazon email when possible.
+- New Amazon users are created automatically after successful Amazon sign-in.
+- Amazon client secret remains server-side only.
+- Added Amazon sign-in health/config status.
+- Existing Chrome extension connection now naturally routes through Amazon sign-in.
+- Disabled new password registrations while retaining legacy password login API for compatibility.
+- Bumped Chrome extension to 1.2.0 and v16 compatibility.
+- Preserved the simplified v15 Review Assistant.
