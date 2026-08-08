@@ -1,0 +1,71 @@
+VineTrack Beta v14 — CLEAN GitHub + Railway Deployment Package
+===============================================================
+
+IMPORTANT
+---------
+This package is intentionally ROOT-READY.
+
+When you unzip it, OPEN the extracted folder and upload the CONTENTS to the
+root of a NEW GitHub repository.
+
+At the first page of the GitHub repository you should directly see:
+  Dockerfile
+  server.py
+  index.html
+  app.html
+  login.html
+  Procfile
+
+Do NOT upload the ZIP itself to GitHub.
+Do NOT upload the enclosing extracted folder as one folder.
+
+NEW GITHUB REPOSITORY
+---------------------
+1. Create a new GitHub repository, for example:
+     vinetrack-v14
+2. Create it as Private.
+3. Open the new repository.
+4. Add file > Upload files.
+5. On your Mac, open this extracted package.
+6. Select ALL files and folders INSIDE it.
+7. Drag those contents into GitHub.
+8. Commit changes.
+
+After the first commit, confirm the GitHub branch shown is:
+  main
+
+NEW RAILWAY SERVICE
+-------------------
+1. In Railway, create a new project/service from the new GitHub repository.
+2. Select the new vinetrack-v14 repository.
+3. Because Dockerfile and server.py are at GitHub repository root:
+     ROOT DIRECTORY = leave blank
+4. Railway should automatically use Dockerfile.
+5. Add a Railway Volume mounted at:
+     /data
+6. Add these variables:
+     VINETRACK_DB_FILE=/data/vinetrack.db
+     VINETRACK_FEEDBACK_FILE=/data/feedback.jsonl
+     VINETRACK_ADMIN_KEY=<your private long secret>
+7. Do NOT manually create a PORT variable.
+8. Deploy.
+9. Generate a Public Domain under Railway Networking.
+
+CHROME EXTENSION
+----------------
+The Chrome Web Store upload ZIP is:
+  VineTrack_Sync_Chrome_Extension_v14_Store.zip
+
+After Chrome Web Store assigns the extension ID and listing URL, add:
+  VINETRACK_CHROME_STORE_URL=<Chrome Web Store listing URL>
+  VINETRACK_EXTENSION_IDS=<32-character Chrome extension ID>
+
+PRESERVE OLD DATA?
+------------------
+A completely new Railway service starts with a new empty /data volume.
+If you need accounts/feedback from the previous Railway service, migrate the
+old volume/database before retiring the old service.
+
+VERSION
+-------
+VineTrack Beta v14

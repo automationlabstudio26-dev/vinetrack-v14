@@ -1,0 +1,24 @@
+VineTrack Sync — privacy disclosure draft
+
+Data handled by the extension
+- VineTrack account connection token
+- VineTrack account display name/email returned after connection
+- The VineTrack site origin
+- Last-sync timestamp and item count
+- Visible Amazon Vine item fields selected by the user-triggered Sync action, such as product title, ASIN/product link, nearby visible status/date text, and product image URL when present
+
+Data not collected by the extension
+- Amazon password
+- Amazon payment information
+- Background browsing history
+- Automatic star ratings
+- Automatic review submissions
+
+When data is read
+Amazon Vine page data is read only after the user opens the extension and clicks Sync My Vine Items.
+
+Purpose
+The data is used only to transfer visible Vine item details into the user's VineTrack account and local VineTrack organiser workflow.
+
+Retention
+The extension stores the VineTrack connection token and small connection/sync metadata in Chrome extension storage. The VineTrack server stores the token only as a cryptographic hash and stores pending sync batches until they are consumed by the signed-in VineTrack user.

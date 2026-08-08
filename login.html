@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Sign in to VineTrack, the private review workflow for Amazon Vine reviewers." />
+  <title>Sign in · VineTrack</title>
+  <link rel="stylesheet" href="login.css" />
+</head>
+<body>
+  <main class="auth-shell">
+    <section class="auth-story" aria-label="About VineTrack">
+      <a class="wordmark" href="/" aria-label="VineTrack home">
+        <span class="logo-mark">V</span><span>VineTrack</span>
+      </a>
+      <div class="story-copy">
+        <span class="eyebrow">Private review workspace</span>
+        <h1>Your Vine reviews, organised around what needs attention next.</h1>
+        <p>Track products, testing evidence, review health and submission status in one calm workspace.</p>
+        <div class="story-points">
+          <div><span>01</span><p><strong>Prioritise clearly</strong><small>See Review Now, Test Today and Waiting.</small></p></div>
+          <div><span>02</span><p><strong>Draft from evidence</strong><small>Use only your own notes, pros and cons.</small></p></div>
+          <div><span>03</span><p><strong>Stay private</strong><small>No Amazon password and no automatic posting.</small></p></div>
+        </div>
+      </div>
+      <div class="story-footer">VineTrack Beta v14 · Account access + browser-local review data</div>
+    </section>
+
+    <section class="auth-panel">
+      <div class="mobile-brand"><span class="logo-mark">V</span><span>VineTrack</span></div>
+      <div class="auth-card">
+        <div class="auth-heading">
+          <span class="eyebrow">Welcome</span>
+          <h2 id="formTitle">Sign in to VineTrack</h2>
+          <p id="formSubtitle">Continue to your private review workspace.</p>
+        </div>
+
+        <div class="auth-tabs" role="tablist" aria-label="Account options">
+          <button class="auth-tab active" id="loginTab" type="button" role="tab" aria-selected="true">Sign in</button>
+          <button class="auth-tab" id="registerTab" type="button" role="tab" aria-selected="false">Create account</button>
+        </div>
+
+        <form id="authForm" novalidate>
+          <label id="nameField" class="field hidden">Name
+            <input id="name" autocomplete="name" maxlength="80" placeholder="Your name" />
+          </label>
+          <label class="field">Email
+            <input id="email" type="email" autocomplete="email" inputmode="email" placeholder="you@example.com" required />
+          </label>
+          <label class="field">Password
+            <div class="password-wrap">
+              <input id="password" type="password" autocomplete="current-password" minlength="8" placeholder="At least 8 characters" required />
+              <button id="togglePassword" class="show-password" type="button" aria-label="Show password">Show</button>
+            </div>
+          </label>
+          <label id="privacyField" class="check-row hidden">
+            <input id="privacyAck" type="checkbox" />
+            <span>I understand my account controls access, while my Vine product and review data stays in this browser during beta.</span>
+          </label>
+          <button id="submitBtn" class="submit-btn" type="submit">Sign in</button>
+          <div id="authError" class="auth-error" role="alert" aria-live="polite"></div>
+        </form>
+
+        <div class="trust-strip">
+          <span>🔒 Password protected</span>
+          <span>◌ No Amazon login</span>
+          <span>↗ No auto-posting</span>
+        </div>
+        <p class="back-home"><a href="/">← Back to VineTrack home</a></p>
+      </div>
+    </section>
+  </main>
+  <script src="login.js"></script>
+</body>
+</html>

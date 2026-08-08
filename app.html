@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VineTrack Beta v14</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body data-user-id="__USER_ID__">
+  <script id="vinetrackAuthData" type="application/json">__AUTH_JSON__</script>
+  <button id="floatingFeedback" class="floating-feedback" type="button">💬 Send feedback</button>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">VineTrack</div>
+      <div class="tagline">Track. Test. Review.</div>
+      <nav>
+        <button class="nav-btn active" data-view="dashboard">Dashboard</button>
+        <button class="nav-btn" data-view="add">Add Product</button>
+        <button class="nav-btn" data-view="products">My Products</button>
+        <button class="nav-btn" data-view="sync">Amazon Sync</button>
+        <button class="nav-btn" data-view="review">Review Assistant</button>
+        <button class="nav-btn" data-view="session">Review Session</button>
+        <button class="nav-btn" data-view="activity">Activity & Calendar</button>
+        <button class="nav-btn" data-view="feedback">Send Feedback</button>
+        <button class="nav-btn" data-view="settings">Settings</button>
+        <a class="nav-btn nav-link" href="index.html#feedback">Beta Landing</a>
+      </nav>
+      <div class="sidebar-account" id="sidebarAccount">
+        <div class="account-avatar" id="accountAvatar">V</div>
+        <div class="account-copy"><strong id="accountName">VineTrack user</strong><span id="accountEmail">Signed in</span></div>
+        <button id="logoutBtn" class="account-logout" type="button" title="Sign out">Sign out</button>
+      </div>
+      <div class="sidebar-footer"><strong>Beta v14</strong><br>Private organiser for Vine reviewers</div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <div>
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageSubtitle">See what needs your attention.</p>
+        </div>
+        <button id="demoDataBtn" class="secondary-btn">Load demo data</button>
+      </header>
+
+      <section id="dashboard" class="view active-view">
+        <div class="stats-grid">
+          <div class="stat-card"><span>Total products</span><strong id="statTotal">0</strong></div>
+          <div class="stat-card"><span>Awaiting delivery</span><strong id="statAwaiting">0</strong></div>
+          <div class="stat-card"><span>Testing</span><strong id="statTesting">0</strong></div>
+          <div class="stat-card"><span>Ready to review</span><strong id="statReady">0</strong></div>
+          <div class="stat-card"><span>Submitted</span><strong id="statSubmitted">0</strong></div>
+          <div class="stat-card"><span>Estimated time saved</span><strong id="statTimeSaved">0 min</strong></div>
+        </div>
+
+
+        <div class="panel-grid v11-grid">
+          <div class="panel health-panel">
+            <div class="panel-header"><h2>Review Health Centre <span class="plus-badge">Plus preview</span></h2><button id="editHealthBtn" class="link-btn" type="button">Update figures</button></div>
+            <div class="health-kpis">
+              <div><span>Evaluation review rate</span><strong id="healthRate">0%</strong><small id="healthStatus">Add your Vine figures</small></div>
+              <div><span>Reviews completed</span><strong id="healthReviewed">0</strong><small id="healthReviewedLabel">of 0 items</small></div>
+              <div><span>Reviews needed for target</span><strong id="healthNeeded">0</strong><small id="healthTargetLabel">Target 90%</small></div>
+              <div><span>Evaluation countdown</span><strong id="healthDays">—</strong><small id="healthDateLabel">No date set</small></div>
+            </div>
+            <div class="progress health-progress"><div id="healthBar"></div></div>
+            <p id="healthAdvice" class="health-advice muted">Enter the current totals shown in your Vine account. VineTrack uses them only for local planning.</p>
+            <div id="healthEditor" class="health-editor" hidden>
+              <div class="form-grid">
+                <label>Items in current evaluation period<input id="healthTotalInput" type="number" min="0" step="1" placeholder="e.g. 80"></label>
+                <label>Reviews completed in period<input id="healthReviewedInput" type="number" min="0" step="1" placeholder="e.g. 68"></label>
+                <label>Your target review rate (%)<input id="healthTargetInput" type="number" min="1" max="100" step="1" value="90"></label>
+                <label>Evaluation date<input id="healthDateInput" type="date"></label>
+              </div>
+              <div class="form-actions"><button id="cancelHealth" class="secondary-btn" type="button">Cancel</button><button id="saveHealth" class="primary-btn" type="button">Save health figures</button></div>
+            </div>
+            <p class="muted small-note">Planning estimate only. VineTrack does not claim to reproduce Amazon's internal eligibility calculation.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><h2>What should I review next? <span class="plus-badge">Plus preview</span></h2><button id="startSessionBtn" class="primary-btn small-btn" type="button">Start review session</button></div>
+            <div id="smartQueue" class="smart-queue"></div>
+          </div>
+        </div>
+
+        <div class="panel-grid">
+          <div class="panel">
+            <div class="panel-header"><h2>Review progress</h2><span id="completionText">0%</span></div>
+            <div class="progress"><div id="completionBar"></div></div>
+            <p class="muted">Based on products at Submitted, Pending approval, or Approved.</p>
+          </div>
+          <div class="panel">
+            <h2>Needs attention</h2>
+            <div id="attentionList" class="list empty">No products need attention.</div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><h2>Rolling review rate</h2><span class="muted">Local records</span></div>
+          <div class="rate-grid">
+            <div><span>30 days</span><strong id="rate30">0%</strong><small id="rate30Label">No activity</small></div>
+            <div><span>60 days</span><strong id="rate60">0%</strong><small id="rate60Label">No activity</small></div>
+            <div><span>90 days</span><strong id="rate90">0%</strong><small id="rate90Label">No activity</small></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header"><h2>Recent products</h2><button class="link-btn" data-go="products">View all</button></div>
+          <div id="recentList" class="list empty">No products yet.</div>
+        </div>
+
+        <div class="panel-grid">
+          <div class="panel">
+            <div class="panel-header"><h2>Quick Amazon access</h2><button class="link-btn" data-go="review">Review assistant</button></div>
+            <div class="quick-actions">
+              <button id="openVineHome" class="secondary-btn" type="button">Open Amazon Vine</button>
+              <button id="openAmazonReviews" class="secondary-btn" type="button">Open your Amazon reviews</button>
+              <button id="goAmazonSync" class="secondary-btn" type="button">Amazon Sync</button>
+              <button id="enableReminders" class="secondary-btn" type="button">Enable browser reminders</button>
+            </div>
+            <p class="muted small-note">Amazon Sync is user-triggered through the VineTrack Sync Chrome extension. VineTrack never asks for your Amazon password and never submits reviews automatically.</p>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><h2>Last 6 weeks</h2><button class="link-btn" data-go="activity">Full activity view</button></div>
+            <div id="miniActivityChart" class="mini-chart"></div>
+          </div>
+        </div>
+      </section>
+      <section id="sync" class="view">
+        <div class="panel form-panel sync-hero">
+          <div class="panel-header">
+            <div><span class="eyebrow">New in Beta v14</span><h2>Amazon Vine Sync</h2><p class="muted">A normal Chrome extension experience: install once, connect once, then sync the Vine items visible on your current Amazon page with one click.</p></div>
+            <span id="syncConnectionBadge" class="status-pill">Checking…</span>
+          </div>
+          <div class="privacy-card sync-trust"><strong>Privacy first</strong><div class="privacy-grid"><span>✓ No Amazon password shared</span><span>✓ No background scraping</span><span>✓ No automatic review posting</span><span>✓ You choose when to sync</span></div></div>
+          <div class="extension-install-card">
+            <div><strong>VineTrack Sync for Chrome</strong><p id="chromeExtensionAvailability" class="muted small-note">Checking Chrome Web Store availability…</p></div>
+            <a id="getChromeExtension" class="primary-btn extension-cta" href="#" target="_blank" rel="noopener" aria-disabled="true">Get Chrome extension</a>
+          </div>
+          <div class="sync-steps simple-sync-steps">
+            <article><span>1</span><div><strong>Install & connect once</strong><p>Install VineTrack Sync from Chrome, keep VineTrack open, click the extension and choose Connect VineTrack.</p></div></article>
+            <article><span>2</span><div><strong>Sync from Amazon Vine</strong><p>Open a Vine Orders or Reviews page and click Sync My Vine Items. VineTrack opens and imports the batch automatically.</p></div></article>
+          </div>
+          <div class="subpanel extension-status-panel">
+            <div class="panel-header"><div><h3>Chrome extension connection</h3><p id="syncStatusText" class="muted">Checking connection…</p></div><button id="disconnectChromeExtension" class="secondary-btn" type="button" hidden>Disconnect extension</button></div>
+            <p id="syncLastUsed" class="muted small-note"></p>
+          </div>
+          <div class="subpanel">
+            <div class="panel-header"><div><h3>Sync inbox</h3><p class="muted">Normally the Chrome extension opens VineTrack and imports the synced batch automatically. This inbox remains available as a fallback.</p></div><button id="checkSyncedItems" class="secondary-btn" type="button">Check now</button></div>
+            <div id="syncPendingSummary" class="sync-pending-summary muted">No pending sync checked yet.</div>
+            <div id="syncPendingList" class="sync-pending-list"></div>
+            <div class="form-actions"><button id="importSyncedItems" class="primary-btn" type="button" disabled>Import pending items</button></div>
+          </div>
+          <div class="notice">VineTrack v14 only receives item details after the user clicks Sync in the Chrome extension. Amazon status text is reference information only and does not automatically change your review lifecycle.</div>
+        </div>
+      </section>
+
+      <section id="add" class="view">
+        <div class="panel form-panel">
+          <form id="productForm">
+            <div class="template-row"><label>Testing template<select id="testingTemplate"><option value="">Choose a template</option><option value="electronics">Electronics</option><option value="kitchen">Kitchen</option><option value="clothing">Clothing</option><option value="beauty">Beauty & personal care</option><option value="home">Home & office</option></select></label><button id="applyTemplate" class="secondary-btn" type="button">Apply template</button></div>
+            <div id="testPackPreview" class="test-pack-preview muted">Choose a testing template to preview its neutral checklist.</div>
+            <div id="duplicateWarning" class="duplicate-warning" hidden></div>
+            <div class="form-grid">
+              <label>Product name<input id="name" required placeholder="e.g. Wireless desk lamp" /></label>
+              <label>Amazon link<input id="link" type="url" placeholder="https://amazon..." /></label>
+              <label>Category<select id="category"><option>Home</option><option>Electronics</option><option>Beauty</option><option>Kitchen</option><option>Clothing</option><option>Office</option><option>Other</option></select></label>
+              <label>Tags<input id="tags" placeholder="e.g. urgent, long test, high value" /></label>
+              <label>Ownership after review<select id="ownership"><option value="">Not decided</option><option>Kept</option><option>Gifted</option><option>Donated</option><option>Recycled</option><option>Disposed</option><option>Returned</option><option>No longer working</option></select></label>
+              <label>Status<select id="status"><option>Ordered</option><option>Awaiting delivery</option><option>Testing</option><option>Ready to review</option><option>Draft ready</option><option>Submitted</option><option>Pending approval</option><option>Approved</option><option>Rejected</option><option>Needs resubmission</option><option>Archived</option></select></label>
+              <label>Order date<input id="orderDate" type="date" /></label>
+              <label>Delivery date<input id="deliveryDate" type="date" /></label>
+              <label>Target review date<input id="targetDate" type="date" /></label>
+              <label>Product value (£)<input id="value" type="number" min="0" step="0.01" placeholder="0.00" /></label>
+            </div>
+            <label>Testing notes<textarea id="notes" rows="4" placeholder="What did you test and for how long?"></textarea></label>
+            <label>Pros<textarea id="pros" rows="3" placeholder="What worked well?"></textarea></label>
+            <label>Cons<textarea id="cons" rows="3" placeholder="What could be improved?"></textarea></label>
+            <div class="form-actions"><button type="reset" class="secondary-btn">Clear</button><button type="submit" class="primary-btn">Save product</button></div>
+          </form>
+        </div>
+      </section>
+
+      <section id="products" class="view">
+        <div class="toolbar">
+          <input id="searchInput" placeholder="Search products" />
+          <select id="statusFilter"><option value="">All statuses</option><option>Ordered</option><option>Awaiting delivery</option><option>Testing</option><option>Ready to review</option><option>Draft ready</option><option>Submitted</option><option>Pending approval</option><option>Approved</option><option>Rejected</option><option>Needs resubmission</option><option>Archived</option></select>
+          <select id="smartFilter"><option value="">All products</option><option value="missing-notes">Missing notes</option><option value="testing-14">Testing 14+ days</option><option value="ready">Ready to review</option><option value="review-now">Smart queue: Review now</option><option value="test-today">Smart queue: Test today</option><option value="submitted-30">Submitted last 30 days</option></select>
+          <input id="tagFilter" placeholder="Filter by tag" />
+          <select id="savedFilter"><option value="">Saved filters</option></select><button id="saveCurrentFilter" class="secondary-btn" type="button">Save filter</button><button id="deleteSavedFilter" class="secondary-btn" type="button">Delete filter</button><button id="exportBtn" class="secondary-btn">Export CSV</button>
+        </div>
+        <div id="productsList" class="product-grid"></div>
+      </section>
+
+      <section id="review" class="view">
+        <div class="review-layout">
+          <div class="panel form-panel">
+            <h2>Review Draft Assistant</h2>
+            <p class="muted">Create a draft only from your genuine testing notes. Check every statement before using it.</p>
+            <label>Select saved product<select id="reviewProduct"><option value="">Choose a product</option></select></label>
+            <div class="review-prep-grid">
+              <div class="subpanel">
+                <div class="panel-header"><h3>Category testing pack <span class="plus-badge">Plus preview</span></h3><span id="testingProgress" class="status-pill">0/0</span></div>
+                <div id="testingChecklistUI" class="checklist muted">Select a product to load its testing checklist.</div>
+              </div>
+              <div class="subpanel">
+                <div class="panel-header"><h3>Photo & evidence checklist</h3><span id="photoProgress" class="status-pill">0/0</span></div>
+                <div id="photoChecklistUI" class="checklist muted">Select a product to load its photo checklist.</div>
+              </div>
+            </div>
+            <label>Listing title and key features<textarea id="reviewListing" rows="5" placeholder="Paste the Amazon listing title and bullet points here. Example: Rechargeable desk lamp; 3 brightness levels; touch control; foldable design; USB-C charging."></textarea></label>
+            <div class="form-actions compact-actions"><button id="prepareFromListing" class="secondary-btn" type="button">Prepare testing fields from listing</button></div>
+            <p class="muted">This creates neutral testing prompts from the seller's claims. It does not treat listing claims as your experience.</p>
+            <div class="form-grid">
+              <label>Your rating<select id="reviewRating"><option value="">Not selected</option><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></label>
+              <label>Length<select id="reviewLength"><option value="short">Short</option><option value="standard" selected>Standard</option><option value="detailed">Detailed</option></select></label>
+              <label>Tone<select id="reviewTone"><option value="neutral">Neutral</option><option value="friendly">Friendly</option><option value="concise">Concise</option></select></label>
+              <label>Who is it suitable for?<input id="reviewAudience" placeholder="Example: home-office users, families, beginners, travellers" /></label>
+            </div>
+            <label>What did you test?<textarea id="reviewTested" rows="3" placeholder="Example: I used it for five days at home and tested the setup, main features, comfort, durability and cleaning."></textarea></label>
+            <label>What worked well?<textarea id="reviewPros" rows="3" placeholder="Example: Easy to set up; felt sturdy; performed as described; simple to clean."></textarea></label>
+            <label>What could be improved?<textarea id="reviewCons" rows="3" placeholder="Example: Instructions could be clearer; cable was shorter than expected; packaging was basic."></textarea></label>
+            <label>Was the listing accurate?<textarea id="reviewAccuracy" rows="2" placeholder="Example: Yes, the size, colour and main features matched the listing. Mention any difference you personally noticed."></textarea></label>
+            <div class="form-actions"><button id="generateReview" class="primary-btn" type="button">Generate review draft</button></div>
+          </div>
+
+          <div class="panel output-panel">
+            <div class="panel-header"><h2>Draft output</h2><span class="status-pill">Editable</span></div>
+            <label>Suggested title<input id="reviewTitleOutput" placeholder="A concise, product-specific title will appear here and remain editable" /></label>
+            <label>Review draft<textarea id="reviewOutput" rows="16" placeholder="Your review draft will appear here"></textarea></label>
+            <div class="review-metrics">
+              <div><span>Words</span><strong id="wordCount">0</strong></div>
+              <div><span>Characters</span><strong id="charCount">0</strong></div>
+              <div><span>Reading time</span><strong id="readingTime">0 min</strong></div>
+              <div><span>Readiness</span><strong id="qualityScore">0/100</strong></div>
+            </div>
+            <div id="qualityTips" class="quality-tips muted">Add genuine testing details to see the quality check.</div>
+            <div class="comparison-box"><div class="panel-header"><h3>Draft editing comparison</h3><span id="editPercent" class="status-pill">0% changed</span></div><p class="muted">VineTrack compares the generated draft with your final edited review.</p><div class="comparison-grid"><div><strong>Original generated draft</strong><textarea id="originalDraft" rows="7" readonly placeholder="Generate a review to preserve the original draft"></textarea></div><div><strong>Final edited review</strong><textarea id="finalReviewMirror" rows="7" readonly placeholder="Your edited review appears here"></textarea></div></div></div>
+
+            <div class="lifecycle-box">
+              <div class="panel-header"><h3>Review lifecycle <span class="plus-badge">Plus preview</span></h3><span id="lifecycleUpdated" class="muted small-note"></span></div>
+              <div class="form-grid lifecycle-controls">
+                <label>Current stage<select id="reviewLifecycle"><option value="Draft ready">Draft ready</option><option value="Submitted">Submitted</option><option value="Pending approval">Pending approval</option><option value="Approved">Approved</option><option value="Rejected">Rejected</option><option value="Needs resubmission">Needs resubmission</option></select></label>
+                <label>Stage note<input id="reviewStatusNote" placeholder="Optional: rejection reason, change made, approval note"></label>
+              </div>
+              <div class="form-actions"><button id="saveLifecycle" class="secondary-btn" type="button">Save lifecycle update</button></div>
+              <div id="reviewHistoryList" class="history-list muted">No review history yet.</div>
+            </div>
+            <div class="notice">Important: This tool must not invent experiences, choose your rating, or hide disadvantages. Edit the draft so it accurately reflects your own experience.</div>
+            <div class="form-actions workflow-actions"><button id="copyTitle" class="secondary-btn" type="button">Copy title</button><button id="copyReview" class="secondary-btn" type="button">Copy full review</button><button id="openAmazonReview" class="secondary-btn" type="button" disabled>Open Amazon</button><button id="markSubmitted" class="primary-btn" type="button">Mark submitted</button><button id="saveReview" class="secondary-btn" type="button">Save draft</button></div>
+          </div>
+        </div>
+      </section>
+
+
+
+      <section id="session" class="view">
+        <div class="panel">
+          <div class="panel-header"><div><h2>Guided Review Session <span class="plus-badge">Plus preview</span></h2><p class="muted">Work through the highest-priority products one at a time.</p></div><button id="restartSession" class="secondary-btn" type="button">Restart queue</button></div>
+          <div id="sessionEmpty" class="session-empty muted">Start a session from the dashboard or click Restart queue.</div>
+          <div id="sessionWorkspace" hidden>
+            <div class="session-progress-row"><strong id="sessionCounter">1 of 1</strong><div class="progress"><div id="sessionProgress"></div></div></div>
+            <div class="session-product-head"><div><span id="sessionBucket" class="status-pill"></span><h3 id="sessionName"></h3><p id="sessionMeta" class="muted"></p></div><button id="sessionOpenAmazon" class="secondary-btn" type="button">Open Amazon</button></div>
+            <div class="review-prep-grid">
+              <div class="subpanel"><h3>Testing checklist</h3><div id="sessionTestingChecklist" class="checklist"></div></div>
+              <div class="subpanel"><h3>Photo/evidence checklist</h3><div id="sessionPhotoChecklist" class="checklist"></div></div>
+            </div>
+            <label>Observations<textarea id="sessionNotes" rows="4" placeholder="What did you test? What happened in normal use?"></textarea></label>
+            <div class="form-grid"><label>Pros<textarea id="sessionPros" rows="3"></textarea></label><label>Cons<textarea id="sessionCons" rows="3"></textarea></label></div>
+            <label class="inline-check"><input id="sessionTestingComplete" type="checkbox"> Testing is complete and I have enough genuine evidence to draft the review.</label>
+            <div class="form-actions session-actions"><button id="sessionSkip" class="secondary-btn" type="button">Skip</button><button id="sessionNeedsTesting" class="secondary-btn" type="button">Needs more testing</button><button id="sessionSaveNext" class="primary-btn" type="button">Save & next</button><button id="sessionDraftReview" class="primary-btn" type="button">Draft review</button></div>
+          </div>
+          <div id="sessionSummary" class="session-summary" hidden></div>
+        </div>
+      </section>
+
+      <section id="activity" class="view">
+        <div class="stats-grid activity-stats">
+          <div class="stat-card"><span>Added this month</span><strong id="activityAdded">0</strong></div>
+          <div class="stat-card"><span>Submitted this month</span><strong id="activitySubmitted">0</strong></div>
+          <div class="stat-card"><span>Pending reviews</span><strong id="activityPending">0</strong></div>
+          <div class="stat-card"><span>Average testing days</span><strong id="activityAverage">0</strong></div>
+        </div>
+        <div class="panel">
+          <div class="panel-header"><h2>Review activity</h2><span class="muted">Last 8 weeks</span></div>
+          <div id="activityChart" class="activity-chart"></div>
+          <div class="chart-legend"><span><i class="legend-added"></i>Products added</span><span><i class="legend-submitted"></i>Reviews submitted</span></div>
+        </div>
+        <div class="panel-grid">
+          <div class="panel">
+            <div class="panel-header"><h2>Review calendar</h2><select id="calendarRange"><option value="30">Next 30 days</option><option value="60">Next 60 days</option><option value="all">All dates</option></select></div>
+            <div id="calendarList" class="calendar-list"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-header"><h2>Local reminders</h2><button id="activityReminderBtn" class="secondary-btn" type="button">Enable reminders</button></div>
+            <p class="muted">Reminders are based on your target dates and saved locally. They work while VineTrack is open; installed browser-app behaviour varies by browser.</p>
+            <div id="reminderList" class="list"></div>
+          </div>
+        </div>
+      </section>
+
+
+      <section id="feedback" class="view">
+        <div class="panel form-panel">
+          <div class="panel-header"><div><h2>Send Beta Feedback</h2><p class="muted">Help shape VineTrack into something genuinely worth paying for.</p></div><span class="status-pill">30–60 seconds</span></div>
+          <form id="inAppFeedbackForm">
+            <label>What was most useful?<textarea id="fbUseful" rows="3" required></textarea></label>
+            <label>What was confusing, missing, or unnecessary?<textarea id="fbMissing" rows="3"></textarea></label>
+            <label>What would make VineTrack worth paying for?<textarea id="fbWorthPaying" rows="3"></textarea></label>
+            <div class="form-grid"><label>Would you pay for VineTrack?<select id="fbWouldPay"><option value="">Choose</option><option>Yes</option><option>Maybe</option><option>No</option></select></label><label>How likely are you to recommend it? (0–10)<input id="fbRecommend" type="number" min="0" max="10"></label></div>
+            <label>Email (optional)<input id="fbEmail" type="email" placeholder="Only if you want a reply"></label>
+            <div class="form-actions"><button id="downloadInAppFeedback" class="secondary-btn" type="button">Download feedback</button><button id="copyInAppFeedback" class="secondary-btn" type="button">Copy feedback</button><button class="primary-btn" type="submit">Save feedback locally</button></div>
+          </form>
+          <p id="feedbackMessage" class="muted"></p>
+          <div class="notice">When hosted with the VineTrack beta server, feedback is sent to the private feedback collector and also kept locally as a fallback.</div>
+        </div>
+      </section>
+
+      <section id="settings" class="view">
+        <div class="panel form-panel">
+          <h2>Settings</h2>
+          <p class="muted">Your VineTrack account protects access. Product, testing and review records remain browser-local during beta and are separated by signed-in account on this device.</p>
+          <label>Display name<input id="userName" placeholder="Your name" /></label>
+          <label>Account email<input id="userEmail" type="email" placeholder="you@example.com" readonly /></label>
+          <div class="form-grid"><label>Plan preview<select id="planPreview"><option value="beta">Beta (all preview features unlocked)</option><option value="free">Free</option><option value="plus">VineTrack Plus</option></select></label><label>Default review target (%)<input id="defaultReviewTarget" type="number" min="1" max="100" value="90"></label></div>
+          <div class="form-grid"><label>Appearance<select id="appearance"><option value="light">Light</option><option value="dark">Dark</option><option value="system">Use device setting</option></select></label><label>Display density<select id="density"><option value="comfortable">Comfortable</option><option value="compact">Compact</option><option value="large">Larger text</option></select></label></div>
+          <div class="privacy-card"><strong>Privacy & review integrity</strong><div class="privacy-grid"><span>✓ No Amazon password required</span><span>✓ No automatic review submission</span><span>✓ No automatic star ratings</span><span>✓ Drafts use your own testing notes</span></div></div>
+          <div class="privacy-card"><strong>Amazon Sync</strong><p class="muted small-note">The VineTrack Sync Chrome extension is optional and only sends items when you click Sync. Manage the connection from the Amazon Sync page.</p><button id="settingsGoSync" class="secondary-btn" type="button">Manage Amazon Sync</button></div>
+          <div class="form-actions"><button id="saveSettings" class="primary-btn">Save settings</button><button id="backupData" class="secondary-btn" type="button">Download backup</button><label class="file-btn secondary-btn">Restore backup<input id="restoreData" type="file" accept="application/json,.json" hidden /></label><button id="clearData" class="danger-btn">Delete all data</button></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="productCardTemplate">
+    <article class="product-card">
+      <div class="product-top">
+        <div><span class="status-pill"></span> <span class="queue-pill"></span><h3 class="product-name"></h3><p class="product-meta"></p></div>
+        <button class="delete-btn" title="Delete">×</button>
+      </div>
+      <p class="product-notes"></p>
+      <div class="card-actions"><select class="status-select"></select><button class="review-btn secondary-btn" type="button">Draft review</button><a class="amazon-link" target="_blank" rel="noopener">Open Amazon</a></div>
+    </article>
+  </template>
+
+  <script src="auth-client.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
