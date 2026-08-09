@@ -1,5 +1,5 @@
 const $=id=>document.getElementById(id);
-const EXT_VERSION='1.2.0';
+const EXT_VERSION='1.3.0';
 
 function show(text,type=''){$('syncMessage').textContent=text;$('syncMessage').className='message '+type;}
 function originPattern(base){try{const u=new URL(base);return u.origin+'/*';}catch{return '';}}
@@ -19,7 +19,7 @@ async function api(base,token,path,options={}){
   return data;
 }
 async function verifyVineTrackOrigin(base){
-  try{const r=await fetch(base+'/health',{cache:'no-store'});const d=await r.json();return r.ok&&(/^VineTrack Beta v1[4-6]/).test(String(d.app||''));}catch{return false;}
+  try{const r=await fetch(base+'/health',{cache:'no-store'});const d=await r.json();return r.ok&&(/^VineTrack (?:Beta v1[4-6]|v17)/).test(String(d.app||''));}catch{return false;}
 }
 
 async function connect(){
