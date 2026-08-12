@@ -1,3 +1,14 @@
+(function applyVineTrackLandingPolish(){
+  document.body.classList.add('vt-landing');
+  if(!document.querySelector('link[data-vt-polish]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='polish.css';
+    link.dataset.vtPolish='true';
+    document.head.appendChild(link);
+  }
+})();
+
 (async function(){
   try{
     const r=await fetch('/api/auth/me',{cache:'no-store'});
