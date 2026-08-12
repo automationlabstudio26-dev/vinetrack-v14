@@ -1,3 +1,14 @@
+(function applyVineTrackLoginPolish(){
+  document.body.classList.add('vt-login');
+  if(!document.querySelector('link[data-vt-polish]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='polish.css';
+    link.dataset.vtPolish='true';
+    document.head.appendChild(link);
+  }
+})();
+
 const params=new URLSearchParams(location.search);
 const requestedNext=params.get('next')||'/app.html';
 const next=(requestedNext.startsWith('/')&&!requestedNext.startsWith('//'))?requestedNext:'/app.html';
