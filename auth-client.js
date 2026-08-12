@@ -1,3 +1,14 @@
+(function applyVineTrackAppPolish(){
+  document.body.classList.add('vt-app');
+  if(!document.querySelector('link[data-vt-polish]')){
+    const link=document.createElement('link');
+    link.rel='stylesheet';
+    link.href='polish.css';
+    link.dataset.vtPolish='true';
+    document.head.appendChild(link);
+  }
+})();
+
 (function(){
   let auth={user:null};
   try{
