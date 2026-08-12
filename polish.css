@@ -1,0 +1,596 @@
+/* VineTrack visual polish — shared overrides for landing, sign-in and app.
+   Loaded by the small page bootstrap scripts so core feature CSS remains untouched. */
+
+/* ---------- Shared interaction polish ---------- */
+body.vt-landing,
+body.vt-login,
+body.vt-app{
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+body.vt-landing a,
+body.vt-landing button,
+body.vt-login a,
+body.vt-login button,
+body.vt-app a,
+body.vt-app button{
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease,box-shadow .18s ease,transform .18s ease,opacity .18s ease;
+}
+body.vt-landing :focus-visible,
+body.vt-login :focus-visible,
+body.vt-app :focus-visible{
+  outline:3px solid rgba(49,95,216,.24);
+  outline-offset:3px;
+}
+
+/* ---------- Landing page ---------- */
+body.vt-landing{
+  --ink:#10213d;
+  --muted:#617087;
+  --blue:#315fd8;
+  --blue2:#2449ad;
+  --navy:#0e274b;
+  --mint:#84ddc1;
+  --line:#dce5f2;
+  --soft:#f5f8fd;
+  background:#fff;
+}
+body.vt-landing .wrap{width:min(1210px,calc(100% - 44px))}
+body.vt-landing .site-header{
+  background:rgba(255,255,255,.82);
+  border-bottom:1px solid rgba(213,224,239,.78);
+  box-shadow:0 8px 30px rgba(19,43,82,.035);
+  backdrop-filter:blur(22px) saturate(150%);
+}
+body.vt-landing .nav-wrap{height:78px}
+body.vt-landing .brand{letter-spacing:-.035em}
+body.vt-landing .brand-mark{
+  border-radius:12px;
+  background:linear-gradient(145deg,#a7efd8 0%,#77b9ff 100%);
+  border:1px solid rgba(255,255,255,.72);
+  box-shadow:0 8px 22px rgba(49,95,216,.16),inset 0 1px 0 rgba(255,255,255,.7);
+}
+body.vt-landing .site-header nav a,
+body.vt-landing .text-link{position:relative}
+body.vt-landing .site-header nav a:after{
+  content:"";
+  position:absolute;
+  left:0;
+  right:100%;
+  bottom:-8px;
+  height:2px;
+  border-radius:99px;
+  background:var(--blue);
+  transition:right .18s ease;
+}
+body.vt-landing .site-header nav a:hover{color:var(--ink)}
+body.vt-landing .site-header nav a:hover:after{right:0}
+body.vt-landing .small-cta{
+  background:linear-gradient(135deg,#122a50,#173968);
+  box-shadow:0 8px 20px rgba(16,40,79,.15);
+}
+body.vt-landing .small-cta:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(16,40,79,.21)}
+body.vt-landing .hero{
+  padding:104px 0 96px;
+  background:
+    linear-gradient(rgba(255,255,255,.78),rgba(255,255,255,.78)),
+    radial-gradient(circle at 82% 14%,rgba(80,132,237,.19),transparent 31%),
+    radial-gradient(circle at 11% 78%,rgba(98,214,178,.17),transparent 27%),
+    linear-gradient(180deg,#fbfdff 0%,#edf4ff 100%);
+}
+body.vt-landing .hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  opacity:.32;
+  background-image:linear-gradient(rgba(76,111,166,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(76,111,166,.055) 1px,transparent 1px);
+  background-size:48px 48px;
+  mask-image:linear-gradient(to bottom,rgba(0,0,0,.52),transparent 82%);
+}
+body.vt-landing .hero-grid{gap:78px;z-index:1}
+body.vt-landing .quiet-badge{
+  background:rgba(233,250,244,.88);
+  border-color:#c5ecdf;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+}
+body.vt-landing .hero h1{
+  max-width:720px;
+  font-size:clamp(50px,5.6vw,76px);
+  letter-spacing:-.062em;
+  line-height:.99;
+}
+body.vt-landing .hero h1 span{
+  background:linear-gradient(100deg,#315fd8,#4778ec 58%,#2d8f79);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+}
+body.vt-landing .lead{max-width:650px;color:#586a83;font-size:19px}
+body.vt-landing .primary{
+  border-radius:13px;
+  padding:14px 21px;
+  box-shadow:0 12px 30px rgba(49,95,216,.22),inset 0 1px 0 rgba(255,255,255,.2);
+}
+body.vt-landing .primary:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(49,95,216,.28)}
+body.vt-landing .secondary{
+  border-color:#cbd7e8;
+  color:#244785;
+  box-shadow:0 4px 14px rgba(27,60,110,.04);
+}
+body.vt-landing .secondary:hover{transform:translateY(-1px);border-color:#aebfda;background:#f9fbff}
+body.vt-landing .trust-row span{
+  background:rgba(255,255,255,.67);
+  border:1px solid rgba(217,228,242,.85);
+  border-radius:999px;
+  padding:7px 10px;
+}
+body.vt-landing .product-preview{
+  border:1px solid rgba(193,208,228,.9);
+  border-radius:26px;
+  box-shadow:0 38px 100px rgba(26,56,105,.20),0 8px 28px rgba(24,48,90,.08);
+  transform:perspective(1400px) rotateY(-2.5deg) rotateX(1deg) translateY(-4px);
+}
+body.vt-landing .preview-topbar{height:45px;background:rgba(250,252,255,.94)}
+body.vt-landing .preview-sidebar{background:linear-gradient(180deg,#10284e,#173868)}
+body.vt-landing .preview-main{background:#f5f8fc}
+body.vt-landing .preview-kpis>div,
+body.vt-landing .preview-panel{border-color:#dce5f1;box-shadow:0 7px 18px rgba(32,58,103,.045)}
+body.vt-landing .problem-strip{
+  background:linear-gradient(100deg,#0d2445,#12325e 58%,#15496a);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.045);
+}
+body.vt-landing .problem-grid>div{padding-top:31px;padding-bottom:31px}
+body.vt-landing .section{padding:100px 0}
+body.vt-landing .section-heading{margin-bottom:44px}
+body.vt-landing .section-heading h2,
+body.vt-landing .workflow-copy h2,
+body.vt-landing .privacy-card h2,
+body.vt-landing .beta-cta-card h2,
+body.vt-landing .feedback-section h2{letter-spacing:-.052em}
+body.vt-landing .feature-grid{gap:19px}
+body.vt-landing .feature-card{
+  border-color:#dce5f1;
+  border-radius:21px;
+  padding:28px;
+  box-shadow:0 7px 24px rgba(24,52,98,.035);
+  transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;
+}
+body.vt-landing .feature-card:not(.featured):hover{
+  transform:translateY(-4px);
+  border-color:#c2d1e6;
+  box-shadow:0 18px 42px rgba(31,60,108,.09);
+}
+body.vt-landing .feature-card.featured{
+  background:radial-gradient(circle at 84% 10%,rgba(132,221,193,.22),transparent 28%),linear-gradient(145deg,#102a51,#1b4b83);
+  box-shadow:0 22px 50px rgba(17,48,91,.16);
+}
+body.vt-landing .feature-icon{border:1px solid #d8e4f7;background:#f0f5ff}
+body.vt-landing .workflow-section{background:linear-gradient(180deg,#f5f8fc,#eef4fb)}
+body.vt-landing .steps article{
+  border-radius:19px;
+  padding:24px;
+  border-color:#dbe5f1;
+  box-shadow:0 10px 30px rgba(31,59,104,.055);
+}
+body.vt-landing .steps article:hover{transform:translateX(4px);box-shadow:0 14px 34px rgba(31,59,104,.08)}
+body.vt-landing .privacy-card{
+  border:1px solid rgba(255,255,255,.08);
+  background:radial-gradient(circle at 90% 0%,rgba(132,221,193,.18),transparent 28%),linear-gradient(145deg,#0e274a,#174377);
+  box-shadow:0 30px 70px rgba(18,48,90,.17);
+}
+body.vt-landing .pricing-section{background:#f6f9fd}
+body.vt-landing .price-card{
+  border-radius:21px;
+  padding:28px;
+  box-shadow:0 7px 22px rgba(25,54,99,.04);
+  transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease;
+}
+body.vt-landing .price-card:hover{transform:translateY(-3px);border-color:#bccce2;box-shadow:0 16px 34px rgba(31,60,106,.08)}
+body.vt-landing .price-card:has(input:checked){border-color:#315fd8;box-shadow:0 0 0 3px rgba(49,95,216,.09),0 18px 40px rgba(49,95,216,.10)}
+body.vt-landing .beta-cta-card{
+  background:radial-gradient(circle at 88% 18%,rgba(90,145,239,.17),transparent 30%),linear-gradient(135deg,#eef5ff,#edf9f5);
+  border-color:#d5e3f5;
+  box-shadow:0 16px 45px rgba(34,68,119,.07);
+}
+body.vt-landing .form-wrap form{
+  border-radius:22px;
+  padding:31px;
+  border-color:#dce5f1;
+  box-shadow:0 18px 50px rgba(34,67,118,.075);
+}
+body.vt-landing label input,
+body.vt-landing label select,
+body.vt-landing label textarea{
+  border-radius:12px;
+  border-color:#cbd7e7;
+  outline:0;
+}
+body.vt-landing label input:focus,
+body.vt-landing label select:focus,
+body.vt-landing label textarea:focus{
+  border-color:#7597e9;
+  box-shadow:0 0 0 4px rgba(49,95,216,.09);
+}
+body.vt-landing footer{background:linear-gradient(110deg,#0b1f3b,#102b50)}
+
+/* ---------- Sign-in page ---------- */
+body.vt-login{
+  --ink:#10213d;
+  --muted:#617087;
+  --blue:#315fd8;
+  --blue2:#2449ad;
+  background:#f4f7fb;
+}
+body.vt-login .auth-story{
+  background:
+    radial-gradient(circle at 13% 11%,rgba(132,221,193,.30),transparent 29%),
+    radial-gradient(circle at 85% 77%,rgba(93,145,240,.30),transparent 31%),
+    linear-gradient(145deg,#0d2447 0%,#143567 54%,#1f4c87 100%);
+}
+body.vt-login .auth-story:before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:52px 52px;
+  mask-image:linear-gradient(115deg,rgba(0,0,0,.7),transparent 82%);
+}
+body.vt-login .auth-story:after{border-color:rgba(255,255,255,.09);width:470px;height:470px}
+body.vt-login .logo-mark{
+  background:linear-gradient(145deg,#a7efd8,#72b7ff);
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:0 10px 28px rgba(3,17,39,.22),inset 0 1px 0 rgba(255,255,255,.65);
+}
+body.vt-login .story-copy h1{letter-spacing:-.058em}
+body.vt-login .story-copy>p{color:#d2e0f5}
+body.vt-login .story-points>div{
+  padding:15px 14px;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  background:rgba(255,255,255,.035);
+  backdrop-filter:blur(8px);
+}
+body.vt-login .story-points>div+div{margin-top:-5px}
+body.vt-login .auth-panel{
+  background:radial-gradient(circle at 84% 12%,rgba(80,132,237,.10),transparent 28%),radial-gradient(circle at 7% 86%,rgba(87,205,169,.10),transparent 26%),linear-gradient(180deg,#fbfcff,#f2f6fb);
+}
+body.vt-login .auth-card{
+  border-radius:28px;
+  border-color:#d9e3f0;
+  padding:38px;
+  box-shadow:0 32px 100px rgba(25,55,100,.15),0 6px 20px rgba(25,55,100,.05);
+}
+body.vt-login .auth-heading h2{font-size:34px;letter-spacing:-.045em}
+body.vt-login .amazon-btn{
+  border-radius:14px;
+  background:linear-gradient(135deg,#121c2c,#0b1320);
+  border-color:#0d1521;
+  box-shadow:0 12px 28px rgba(10,19,32,.20);
+}
+body.vt-login .amazon-btn:hover{transform:translateY(-2px);box-shadow:0 16px 34px rgba(10,19,32,.27)}
+body.vt-login .amazon-btn-icon{
+  border-radius:9px;
+  background:linear-gradient(145deg,#ffc66d,#ffae35);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.55);
+}
+body.vt-login .amazon-explain{
+  border-radius:16px;
+  background:linear-gradient(180deg,#fafcff,#f5f8fc);
+  border-color:#dce5f1;
+}
+body.vt-login .trust-strip span{
+  border:1px solid #e0e7f0;
+  background:#f8fafc;
+  border-radius:999px;
+  padding:6px 9px;
+}
+body.vt-login .back-home a:hover{color:#2449ad}
+
+/* ---------- App / dashboard ---------- */
+body.vt-app{
+  --bg:#f3f6fb;
+  --panel:#fff;
+  --text:#12203a;
+  --muted:#66748a;
+  --line:#dce5f0;
+  --accent:#315fd8;
+  --accent2:#2449ad;
+  --danger:#b42318;
+  background:
+    radial-gradient(circle at 93% 2%,rgba(76,124,226,.07),transparent 25%),
+    var(--bg);
+}
+body.vt-app .app-shell{grid-template-columns:272px minmax(0,1fr)}
+body.vt-app .sidebar{
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow:auto;
+  padding:28px 20px 22px;
+  background:radial-gradient(circle at 20% 0%,rgba(126,219,190,.14),transparent 24%),linear-gradient(180deg,#0b1f3b 0%,#102b50 56%,#12355f 100%);
+  border-right:1px solid rgba(255,255,255,.055);
+  box-shadow:10px 0 34px rgba(14,35,68,.05);
+}
+body.vt-app .sidebar .brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-size:26px;
+  letter-spacing:-.035em;
+}
+body.vt-app .sidebar .brand:before{
+  content:"V";
+  width:37px;
+  height:37px;
+  display:grid;
+  place-items:center;
+  border-radius:12px;
+  flex:0 0 auto;
+  font-size:17px;
+  font-weight:900;
+  color:#12315f;
+  background:linear-gradient(145deg,#a8efd9,#73b7ff);
+  box-shadow:0 9px 25px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.75);
+}
+body.vt-app .tagline{margin:7px 0 28px 48px;color:#a9bfdc;font-size:12px;letter-spacing:.04em}
+body.vt-app .sidebar nav{gap:6px}
+body.vt-app .nav-btn{
+  position:relative;
+  padding:11px 13px;
+  border:1px solid transparent;
+  border-radius:11px;
+  color:#c1cee0;
+  font-size:13.5px;
+  font-weight:650;
+}
+body.vt-app .nav-btn:hover{background:rgba(255,255,255,.065);color:#fff;border-color:rgba(255,255,255,.055)}
+body.vt-app .nav-btn.active{
+  background:linear-gradient(90deg,rgba(132,221,193,.15),rgba(104,151,234,.12));
+  border-color:rgba(146,224,201,.18);
+  color:#fff;
+  box-shadow:inset 3px 0 0 #8de0c6;
+}
+body.vt-app .sidebar-account{
+  margin-top:22px;
+  padding:13px;
+  border:1px solid rgba(255,255,255,.085);
+  border-radius:14px;
+  background:rgba(255,255,255,.045);
+  backdrop-filter:blur(8px);
+}
+body.vt-app .account-avatar{
+  background:linear-gradient(145deg,#9ce8d0,#75b6fb)!important;
+  color:#13325e!important;
+  box-shadow:0 6px 17px rgba(0,0,0,.13);
+}
+body.vt-app .account-copy strong{color:#fff}
+body.vt-app .account-copy span{color:#9fb3d0}
+body.vt-app .account-logout{color:#bfd0e8!important}
+body.vt-app .sidebar-footer{margin-top:16px;padding-top:16px;border-top:1px solid rgba(255,255,255,.08);color:#8fa6c6;line-height:1.55}
+body.vt-app .main-content{min-width:0;padding:32px 38px 72px;max-width:1600px;width:100%;margin:0 auto}
+body.vt-app .topbar{margin-bottom:27px;padding:2px 2px 0}
+body.vt-app .topbar h1{font-size:32px;letter-spacing:-.04em;color:#10213d}
+body.vt-app .topbar p{color:#708098}
+body.vt-app .stats-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:15px;margin-bottom:20px}
+body.vt-app .stat-card,
+body.vt-app .panel,
+body.vt-app .product-card{
+  border-color:#dce5f0;
+  border-radius:19px;
+  box-shadow:0 8px 28px rgba(26,52,94,.055);
+}
+body.vt-app .stat-card{
+  position:relative;
+  overflow:hidden;
+  padding:20px 21px;
+  min-height:110px;
+}
+body.vt-app .stat-card:before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+  height:3px;
+  background:linear-gradient(90deg,#315fd8,#84ddc1);
+  opacity:.72;
+}
+body.vt-app .stat-card span{font-size:12px;font-weight:700;color:#738096;text-transform:uppercase;letter-spacing:.045em}
+body.vt-app .stat-card strong{font-size:31px;letter-spacing:-.04em;color:#12213c}
+body.vt-app .panel{padding:23px 24px;margin-bottom:20px}
+body.vt-app .panel-grid{gap:20px}
+body.vt-app .panel-header{gap:16px;align-items:flex-start}
+body.vt-app .panel h2{font-size:19px;letter-spacing:-.025em;color:#15233c}
+body.vt-app .panel h3{color:#172640}
+body.vt-app .plus-badge{
+  background:#edf3ff;
+  color:#315bbd;
+  border-color:#d5e2fb;
+  padding:4px 8px;
+}
+body.vt-app .health-kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+body.vt-app .health-kpis>div,
+body.vt-app .review-metrics>div,
+body.vt-app .rate-grid>div{
+  background:linear-gradient(180deg,#fbfcff,#f6f9fc);
+  border-color:#dfe7f1;
+  border-radius:13px;
+  padding:13px;
+}
+body.vt-app .health-kpis strong{letter-spacing:-.04em;color:#14284a}
+body.vt-app .rate-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+body.vt-app .rate-grid>div{padding:16px}
+body.vt-app .rate-grid strong{display:block;font-size:25px;letter-spacing:-.035em;margin:5px 0}
+body.vt-app .progress{height:10px;background:#e8edf4;box-shadow:inset 0 1px 2px rgba(31,51,85,.04)}
+body.vt-app .progress div{background:linear-gradient(90deg,#315fd8,#5b83e9 70%,#69c9ad)}
+body.vt-app .queue-row{
+  border-radius:12px;
+  padding:11px 12px;
+  border-color:#dfe7f1;
+  box-shadow:0 3px 10px rgba(30,55,96,.025);
+}
+body.vt-app .queue-row:hover{border-color:#b9cbea;background:#f7faff;transform:translateY(-1px)}
+body.vt-app .status-pill{
+  background:#edf3ff;
+  color:#315bbd;
+  border:1px solid #dbe6fa;
+  font-weight:700;
+}
+body.vt-app input,
+body.vt-app select,
+body.vt-app textarea{
+  border-color:#cfd9e7;
+  border-radius:11px;
+  padding:11px 12px;
+  color:#16243d;
+  outline:0;
+  box-shadow:inset 0 1px 1px rgba(31,51,84,.02);
+}
+body.vt-app input:focus,
+body.vt-app select:focus,
+body.vt-app textarea:focus{
+  border-color:#7e9bea;
+  box-shadow:0 0 0 4px rgba(49,95,216,.085);
+}
+body.vt-app label{color:#344159;font-size:13px}
+body.vt-app .primary-btn,
+body.vt-app .secondary-btn,
+body.vt-app .danger-btn{
+  border-radius:11px;
+  font-weight:750;
+  padding:10px 15px;
+}
+body.vt-app .primary-btn{
+  background:linear-gradient(135deg,#315fd8,#2449ad);
+  box-shadow:0 8px 19px rgba(49,95,216,.18),inset 0 1px 0 rgba(255,255,255,.18);
+}
+body.vt-app .primary-btn:hover{transform:translateY(-1px);box-shadow:0 11px 24px rgba(49,95,216,.23)}
+body.vt-app .secondary-btn{background:#edf3ff;color:#284fae;border:1px solid #dbe5fa}
+body.vt-app .secondary-btn:hover{background:#e5edff;border-color:#c7d6f4}
+body.vt-app .link-btn{font-weight:750;color:#315fd8}
+body.vt-app .toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:10px;
+  padding:14px;
+  background:#fff;
+  border:1px solid #dce5f0;
+  border-radius:17px;
+  box-shadow:0 7px 24px rgba(26,52,94,.045);
+}
+body.vt-app .toolbar>*{width:auto;flex:1 1 150px;margin:0}
+body.vt-app .toolbar button{flex:0 0 auto}
+body.vt-app .product-grid{gap:18px}
+body.vt-app .product-card{padding:20px;transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+body.vt-app .product-card:hover{transform:translateY(-2px);border-color:#c9d6e8;box-shadow:0 14px 34px rgba(26,52,94,.075)}
+body.vt-app .product-name{font-size:18px;letter-spacing:-.02em}
+body.vt-app .product-meta,
+body.vt-app .product-notes{line-height:1.5}
+body.vt-app .amazon-link{color:#315fd8}
+body.vt-app .subpanel,
+body.vt-app .lifecycle-box{
+  border-radius:15px;
+  background:#f8fafe;
+  border-color:#dce5f0;
+}
+body.vt-app .privacy-card{
+  border-color:#bfe9d9;
+  background:linear-gradient(135deg,#f1fcf7,#f5fbff);
+  color:#175544;
+  border-radius:15px;
+}
+body.vt-app .notice{border-radius:13px;padding:13px 14px}
+body.vt-app .floating-feedback{
+  right:22px;
+  bottom:22px;
+  padding:12px 17px;
+  background:linear-gradient(135deg,#102844,#163e69);
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 14px 34px rgba(15,35,66,.26);
+}
+body.vt-app .floating-feedback:hover{transform:translateY(-2px);box-shadow:0 18px 40px rgba(15,35,66,.31)}
+body.vt-app .calendar-item{border-radius:14px;border-color:#dce5f0}
+body.vt-app .calendar-date{background:#edf3ff;color:#315bbd}
+body.vt-app .test-pack-preview{border-radius:12px;background:#fafcff}
+body.vt-app .review-focus-card{
+  background:#fff;
+  border:1px solid #dce5f0;
+  border-radius:18px;
+  padding:20px;
+  box-shadow:0 7px 24px rgba(26,52,94,.04);
+  margin-bottom:16px;
+}
+body.vt-app .review-focus-head h3{margin:4px 0 5px;font-size:20px;letter-spacing:-.02em}
+body.vt-app .step-kicker{font-size:11px;font-weight:850;text-transform:uppercase;letter-spacing:.08em;color:#315fd8}
+body.vt-app details.review-details{border-top:1px solid #e1e8f2;margin-top:16px;padding-top:14px}
+body.vt-app details.review-details summary{cursor:pointer;color:#315fd8;font-weight:750}
+
+/* App dark mode retains the new structure while respecting the user's setting. */
+body.vt-app.dark-theme{
+  --bg:#0d1524;
+  --panel:#111c2e;
+  --text:#e7eef8;
+  --muted:#9aa9bd;
+  --line:#29394f;
+  background:#0d1524;
+}
+body.vt-app.dark-theme .topbar h1,
+body.vt-app.dark-theme .panel h2,
+body.vt-app.dark-theme .panel h3,
+body.vt-app.dark-theme .stat-card strong,
+body.vt-app.dark-theme .product-name{color:#edf3fb}
+body.vt-app.dark-theme .stat-card,
+body.vt-app.dark-theme .panel,
+body.vt-app.dark-theme .product-card,
+body.vt-app.dark-theme .toolbar,
+body.vt-app.dark-theme .review-focus-card{background:#111c2e;border-color:#29394f;box-shadow:none}
+body.vt-app.dark-theme .health-kpis>div,
+body.vt-app.dark-theme .review-metrics>div,
+body.vt-app.dark-theme .rate-grid>div,
+body.vt-app.dark-theme .subpanel,
+body.vt-app.dark-theme .lifecycle-box{background:#17243a;border-color:#2d4059}
+body.vt-app.dark-theme input,
+body.vt-app.dark-theme select,
+body.vt-app.dark-theme textarea{background:#142238;color:#edf3fb;border-color:#38506d}
+body.vt-app.dark-theme .secondary-btn{background:#1c3157;color:#c7d8ff;border-color:#314c77}
+body.vt-app.dark-theme .privacy-card{background:#0d2b25;border-color:#255d4f;color:#d5f6eb}
+body.vt-app.dark-theme .queue-row{background:#17243a;border-color:#2d4059}
+body.vt-app.dark-theme .queue-row:hover{background:#1b2b45}
+
+/* ---------- Responsive ---------- */
+@media(max-width:1100px){
+  body.vt-app .app-shell{grid-template-columns:1fr}
+  body.vt-app .sidebar{position:static;height:auto;overflow:visible;padding:20px}
+  body.vt-app .sidebar nav{grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+  body.vt-app .tagline{margin-left:48px;margin-bottom:18px}
+  body.vt-app .sidebar-account{margin-top:15px}
+  body.vt-app .sidebar-footer{display:none}
+  body.vt-app .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.vt-app .main-content{padding:28px}
+  body.vt-landing .product-preview{transform:none}
+}
+@media(max-width:760px){
+  body.vt-landing .wrap{width:min(100% - 28px,1210px)}
+  body.vt-landing .section{padding:76px 0}
+  body.vt-landing .hero{padding:72px 0 68px}
+  body.vt-landing .hero h1{font-size:clamp(43px,12vw,56px)}
+  body.vt-landing .trust-row span{width:100%}
+  body.vt-landing .feature-card{padding:24px}
+  body.vt-landing .privacy-card{padding:30px 24px}
+  body.vt-login .auth-card{padding:30px 24px}
+  body.vt-app .sidebar nav{grid-template-columns:repeat(2,minmax(0,1fr))}
+  body.vt-app .main-content{padding:22px 17px 80px}
+  body.vt-app .topbar{align-items:flex-start}
+  body.vt-app .topbar h1{font-size:28px}
+  body.vt-app .stats-grid,
+  body.vt-app .health-kpis,
+  body.vt-app .rate-grid{grid-template-columns:1fr}
+  body.vt-app .panel{padding:19px 17px}
+  body.vt-app .panel-header{flex-direction:column;align-items:flex-start}
+  body.vt-app .toolbar{padding:12px}
+  body.vt-app .toolbar>*{flex:1 1 100%;width:100%}
+  body.vt-app .toolbar button{flex:1 1 calc(50% - 8px)}
+  body.vt-app .floating-feedback{right:14px;bottom:14px}
+}
