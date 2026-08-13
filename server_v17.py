@@ -129,7 +129,7 @@ def production_landing(html):
     end=html.find('  <section class="beta-cta">',start)
     if start>=0 and end>start:
         section='''  <section id="pricing" class="section pricing-section"><div class="wrap">
-        <div class="section-heading"><div><span class="eyebrow">Simple pricing</span><h2>Start free. Upgrade when VineTrack becomes part of your routine.</h2></div><p>Basic manual tracking is free. Plus unlocks Review Health, Smart Queue, Chrome sync and guided sessions.</p></div>
+        <div class="section-heading"><div><span class="eyebrow">Simple pricing</span><h2>Try VineTrack Plus free for 7 days.</h2></div><p>Full Plus access for 7 days. £0 today. Payment method required. After the trial, your selected subscription renews automatically unless you cancel before the trial ends.</p></div>
         <div class="pricing-grid production-pricing">
           <article class="price-card">
   <span class="plan-name">Free</span>
