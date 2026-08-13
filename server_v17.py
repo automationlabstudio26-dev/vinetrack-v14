@@ -131,9 +131,32 @@ def production_landing(html):
         section='''  <section id="pricing" class="section pricing-section"><div class="wrap">
         <div class="section-heading"><div><span class="eyebrow">Simple pricing</span><h2>Start free. Upgrade when VineTrack becomes part of your routine.</h2></div><p>Basic manual tracking is free. Plus unlocks Review Health, Smart Queue, Chrome sync and guided sessions.</p></div>
         <div class="pricing-grid production-pricing">
-          <article class="price-card"><span class="plan-name">Free</span><strong>£0</strong><p>Manual product tracking and a basic review workflow.</p><a class="secondary price-cta" href="/auth/amazon?next=%2Fapp.html">Start free</a></article>
-          <article class="price-card recommended"><em>Most flexible</em><span class="plan-name">Plus Monthly</span><strong>£2.99<small>/month</small></strong><p>Full workflow, Chrome sync, Review Health, Smart Queue and guided review sessions.</p><button class="primary price-cta" data-checkout-plan="monthly" type="button">Choose monthly</button></article>
-          <article class="price-card"><em>Save over 30%</em><span class="plan-name">Plus Annual</span><strong>£24.99<small>/year</small></strong><p>Everything in Plus for one annual payment.</p><button class="primary price-cta" data-checkout-plan="annual" type="button">Choose annual</button></article>
+          <article class="price-card">
+  <span class="plan-name">Free</span>
+  <strong>£0</strong>
+  <p>Manual product tracking and a basic review workflow.</p>
+  <a class="secondary price-cta" href="/auth/amazon?next=%2Fapp.html">Start free</a>
+</article>
+
+<article class="price-card recommended">
+  <em>7-day free trial</em>
+  <span class="plan-name">Plus Monthly</span>
+  <strong>£2.99<small>/month</small></strong>
+  <p>7 days free with full Plus access, then £2.99/month unless cancelled before the trial ends.</p>
+  <button class="primary price-cta" data-checkout-plan="monthly" type="button">
+    Start 7-day free trial
+  </button>
+</article>
+
+<article class="price-card">
+  <em>7-day free trial</em>
+  <span class="plan-name">Plus Annual</span>
+  <strong>£24.99<small>/year</small></strong>
+  <p>7 days free with full Plus access, then £24.99/year unless cancelled before the trial ends.</p>
+  <button class="primary price-cta" data-checkout-plan="annual" type="button">
+    Start 7-day free trial
+  </button>
+</article>
         </div><p id="pricingStatus" class="pricing-status"></p></div></section>\n\n'''
         html=html[:start]+section+html[end:]
     html=html.replace('</head>','<link rel="stylesheet" href="/production.css"></head>')
