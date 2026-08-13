@@ -9,6 +9,32 @@
   }
 })();
 
+(function exposePublishedChromeExtension(){
+  const storeUrl='https://chromewebstore.google.com/detail/vinetrack-for-chrome/mfgohljjhgoeilbhiopkjdmodmkdknkj';
+
+  const heroSecondary=document.querySelector('.hero-actions .secondary');
+  if(heroSecondary){
+    heroSecondary.href=storeUrl;
+    heroSecondary.target='_blank';
+    heroSecondary.rel='noopener noreferrer';
+    heroSecondary.textContent='Get Chrome extension';
+  }
+
+  const navActions=document.querySelector('.nav-actions');
+  if(navActions&&!navActions.querySelector('[data-vt-chrome-store]')){
+    const link=document.createElement('a');
+    link.className='text-link';
+    link.href=storeUrl;
+    link.target='_blank';
+    link.rel='noopener noreferrer';
+    link.textContent='Chrome extension';
+    link.dataset.vtChromeStore='true';
+    navActions.prepend(link);
+  }
+
+  document.querySelectorAll('.hero-badges .eyebrow').forEach(el=>{el.textContent='VineTrack v17 · Live';});
+})();
+
 (async function(){
   try{
     const r=await fetch('/api/auth/me',{cache:'no-store'});
