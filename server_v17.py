@@ -233,7 +233,7 @@ class Handler(base.Handler):
                 'success_url':origin+'/app.html?billing=success','cancel_url':origin+'/app.html?billing=cancelled',
                 'client_reference_id':str(user['id']),'metadata[vinetrack_user_id]':str(user['id']),
                 'metadata[billing_period]':period,'subscription_data[metadata][vinetrack_user_id]':str(user['id']),
-                'subscription_data[metadata][plan]':'plus','subscription_data[metadata][billing_period]':period,
+                'subscription_data[metadata][plan]':'plus','subscription_data[metadata][billing_period]':period,'subscription_data[trial_period_days]':'7',
                 'allow_promotion_codes':'true'}
             customer=user['billing'].get('customer_id')
             fields['customer' if customer else 'customer_email']=customer or user['email']
