@@ -1,0 +1,110 @@
+/* VineTrack visual refresh
+   Auto-detects each VineTrack surface with :has() and loads after the existing stylesheet.
+   No JavaScript or product logic is changed.
+*/
+:root{
+  --vt-navy:#0f284f;
+  --vt-navy-2:#173e76;
+  --vt-blue:#315fd8;
+  --vt-blue-2:#2148ad;
+  --vt-mint:#8fe0c7;
+  --vt-mint-2:#6fcfb1;
+  --vt-sky:#eef5ff;
+  --vt-ice:#f7faff;
+  --vt-ink:#14213a;
+  --vt-muted:#657187;
+  --vt-line:#dce6f2;
+  --vt-card:rgba(255,255,255,.94);
+  --vt-shadow:0 16px 48px rgba(29,55,99,.09);
+  --vt-shadow-strong:0 26px 76px rgba(29,55,99,.14);
+}
+
+body:has(.site-header),body:has(.app-shell),body:has(.auth-shell),body:has(.admin),body:has(.brand-icon){position:relative;isolation:isolate;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+body:has(.site-header)::after,body:has(.app-shell)::after,body:has(.auth-shell)::after,body:has(.admin)::after,body:has(.brand-icon)::after{content:"";position:fixed;width:min(35vw,440px);aspect-ratio:1;right:-72px;bottom:-88px;z-index:4;pointer-events:none;background:url("chrome_extension_v16/icons/icon128.png") center/contain no-repeat;opacity:.052;filter:saturate(.9)}
+body:has(.site-header) ::selection,body:has(.app-shell) ::selection,body:has(.auth-shell) ::selection,body:has(.admin) ::selection,body:has(.brand-icon) ::selection{background:rgba(143,224,199,.55);color:var(--vt-navy)}
+body:has(.site-header) a,body:has(.site-header) button,body:has(.app-shell) a,body:has(.app-shell) button,body:has(.app-shell) input,body:has(.app-shell) select,body:has(.app-shell) textarea,body:has(.auth-shell) a,body:has(.auth-shell) button,body:has(.admin) a,body:has(.admin) button,body:has(.admin) input,body:has(.brand-icon) a{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease,background .18s ease,color .18s ease}
+body:has(.site-header) .brand-mark,body:has(.auth-shell) .logo-mark{font-size:0!important;background:url("chrome_extension_v16/icons/icon128.png") center/78% no-repeat,linear-gradient(135deg,#a9ead7,#78b7ff)!important;border:1px solid rgba(255,255,255,.45);box-shadow:0 9px 25px rgba(34,72,167,.16)!important}
+body:has(.site-header) .brand-mark::after,body:has(.auth-shell) .logo-mark::after{content:""}
+
+body:has(.site-header){background:#fff}
+body:has(.site-header) .site-header{background:rgba(255,255,255,.84)!important;backdrop-filter:blur(18px) saturate(1.12)!important;border-bottom:1px solid rgba(219,228,241,.86)!important;box-shadow:0 8px 30px rgba(31,56,102,.045)}
+body:has(.site-header) .hero{background:radial-gradient(circle at 88% 12%,rgba(49,95,216,.14),transparent 30rem),radial-gradient(circle at 8% 86%,rgba(143,224,199,.17),transparent 27rem),linear-gradient(180deg,#fcfdff 0%,#f2f7fd 100%)!important}
+body:has(.site-header) .hero h1{text-wrap:balance}
+body:has(.site-header) .hero h1 span{background:linear-gradient(120deg,#315fd8,#397dcc);-webkit-background-clip:text;background-clip:text;color:transparent!important}
+body:has(.site-header) .product-preview{border:1px solid #d4e0ee!important;box-shadow:0 38px 100px rgba(26,54,101,.18)!important;transform:perspective(1200px) rotateY(-1.4deg) rotateX(.6deg)!important}
+body:has(.site-header) .feature-card,body:has(.site-header) .price-card,body:has(.site-header) .steps article,body:has(.site-header) .form-wrap form{border-color:var(--vt-line)!important;box-shadow:0 10px 32px rgba(31,56,102,.045)}
+body:has(.site-header) .feature-card:not(.featured):hover,body:has(.site-header) .price-card:hover,body:has(.site-header) .steps article:hover{transform:translateY(-4px);border-color:#c6d7ed!important;box-shadow:var(--vt-shadow)}
+body:has(.site-header) .feature-card.featured,body:has(.site-header) .privacy-card{background:radial-gradient(circle at 100% 0,rgba(143,224,199,.17),transparent 17rem),linear-gradient(145deg,#10284f,#1e4a88)!important}
+body:has(.site-header) .feature-icon{border:1px solid rgba(49,95,216,.08)}
+body:has(.site-header) .workflow-section,body:has(.site-header) .pricing-section,body:has(.site-header) .feedback-section{background:linear-gradient(180deg,#f7fafe,#eef4fb)!important}
+body:has(.site-header) .problem-strip,body:has(.site-header) footer{background:linear-gradient(120deg,#0d2347,#163966)!important}
+body:has(.site-header) .beta-cta-card{background:linear-gradient(135deg,#edf4ff,#e9f8f4)!important;border-color:#d2e4ef!important;box-shadow:0 18px 54px rgba(31,56,102,.07)}
+body:has(.site-header) .primary,body:has(.site-header) .small-cta{box-shadow:0 12px 30px rgba(49,95,216,.22)!important}
+body:has(.site-header) .primary:hover,body:has(.site-header) .small-cta:hover{transform:translateY(-2px);box-shadow:0 17px 36px rgba(49,95,216,.27)!important}
+body:has(.site-header) .secondary:hover{transform:translateY(-1px);border-color:#a7bbdc!important;background:#f9fbff!important}
+
+body:has(.app-shell){background:linear-gradient(180deg,#f8fbff,#f2f6fb)!important}
+body:has(.app-shell) .app-shell{grid-template-columns:258px 1fr!important}
+body:has(.app-shell) .sidebar{background:radial-gradient(circle at 0 0,rgba(143,224,199,.16),transparent 17rem),linear-gradient(180deg,#0d274e 0%,#14325f 58%,#0d213e 100%)!important;border-right:1px solid rgba(255,255,255,.06);box-shadow:16px 0 42px rgba(17,40,79,.10)}
+body:has(.app-shell) .sidebar .brand{display:flex;align-items:center;gap:11px;font-size:27px!important;line-height:1;letter-spacing:-.035em}
+body:has(.app-shell) .sidebar .brand::before{content:"";flex:0 0 40px;width:40px;height:40px;border-radius:12px;background:url("chrome_extension_v16/icons/icon128.png") center/78% no-repeat,linear-gradient(135deg,#a7ead6,#78b5ff);box-shadow:0 10px 26px rgba(0,0,0,.15)}
+body:has(.app-shell) .sidebar .tagline{color:#b7cae8!important;margin-left:51px!important;margin-top:-3px!important}
+body:has(.app-shell) .nav-btn{color:#d3deed!important;padding:12px 14px!important;border:1px solid transparent!important}
+body:has(.app-shell) .nav-btn:hover{color:#fff!important;background:rgba(255,255,255,.072)!important;border-color:rgba(255,255,255,.07)!important;transform:translateX(2px)}
+body:has(.app-shell) .nav-btn.active{color:#fff!important;background:linear-gradient(135deg,rgba(143,224,199,.18),rgba(107,158,245,.16))!important;border-color:rgba(143,224,199,.22)!important;box-shadow:inset 3px 0 0 #8fe0c7}
+body:has(.app-shell) .sidebar-account{background:rgba(255,255,255,.045)!important;border-color:rgba(255,255,255,.10)!important;border-radius:15px!important;padding:12px!important}
+body:has(.app-shell) .main-content{background:radial-gradient(circle at 95% 0,rgba(49,95,216,.055),transparent 22rem),linear-gradient(180deg,rgba(249,252,255,.92),rgba(243,247,252,.96))}
+body:has(.app-shell) .topbar{padding:5px 2px 9px}
+body:has(.app-shell) .topbar h1{font-size:32px!important;letter-spacing:-.04em}
+body:has(.app-shell) .stat-card,body:has(.app-shell) .panel,body:has(.app-shell) .product-card,body:has(.app-shell) .subpanel,body:has(.app-shell) .lifecycle-box{background:var(--vt-card)!important;border-color:var(--vt-line)!important;box-shadow:0 8px 30px rgba(31,56,102,.055)!important}
+body:has(.app-shell) .stat-card{position:relative;overflow:hidden;padding:19px!important}
+body:has(.app-shell) .stat-card::after{content:"";position:absolute;width:82px;height:82px;border-radius:50%;right:-31px;top:-34px;background:radial-gradient(circle,rgba(49,95,216,.13),rgba(49,95,216,0) 72%)}
+body:has(.app-shell) .stat-card strong{color:var(--vt-navy);letter-spacing:-.04em}
+body:has(.app-shell) .panel{border-radius:18px!important;padding:22px!important}
+body:has(.app-shell) .panel:hover{box-shadow:0 13px 36px rgba(31,56,102,.075)!important}
+body:has(.app-shell) .panel h2{letter-spacing:-.025em}
+body:has(.app-shell) .primary-btn{background:linear-gradient(135deg,var(--vt-blue),var(--vt-blue-2))!important;box-shadow:0 8px 21px rgba(49,95,216,.17)}
+body:has(.app-shell) .primary-btn:hover{transform:translateY(-1px);box-shadow:0 12px 26px rgba(49,95,216,.23)}
+body:has(.app-shell) .secondary-btn{background:#edf4ff!important;color:#244c9e!important;border:1px solid #d5e2f5!important}
+body:has(.app-shell) .secondary-btn:hover{background:#e5efff!important;border-color:#bdd1ee!important}
+body:has(.app-shell) .link-btn,body:has(.app-shell) .amazon-link{color:var(--vt-blue)!important}
+body:has(.app-shell) .progress{background:#e7edf6!important}
+body:has(.app-shell) .progress div{background:linear-gradient(90deg,var(--vt-blue),#68a7ec,var(--vt-mint))!important}
+body:has(.app-shell) .plus-badge,body:has(.app-shell) .status-pill,body:has(.app-shell) .tag-chip{background:#edf4ff!important;color:#2853aa!important;border-color:#d6e3f7!important}
+body:has(.app-shell) .health-kpis>div,body:has(.app-shell) .review-metrics>div,body:has(.app-shell) .rate-grid>div{background:linear-gradient(180deg,#fbfdff,#f5f8fc)!important;border-color:#e0e8f2!important}
+body:has(.app-shell) .queue-row:hover{border-color:#b7caea!important;background:#f6f9ff!important;transform:translateY(-1px)}
+body:has(.app-shell) .toolbar{padding:14px;background:rgba(255,255,255,.78);border:1px solid var(--vt-line);border-radius:16px;box-shadow:0 8px 26px rgba(31,56,102,.04)}
+body:has(.app-shell) input,body:has(.app-shell) select,body:has(.app-shell) textarea{border-color:#cfd9e8!important}
+body:has(.app-shell) input:focus,body:has(.app-shell) select:focus,body:has(.app-shell) textarea:focus{border-color:#7fa0e8!important;box-shadow:0 0 0 4px rgba(49,95,216,.09)!important;outline:none}
+body:has(.app-shell) .floating-feedback{background:linear-gradient(135deg,#10284f,#315fd8)!important;box-shadow:0 14px 35px rgba(16,40,79,.26)!important}
+
+body:has(.auth-shell) .auth-story{background:radial-gradient(circle at 10% 10%,rgba(143,224,199,.26),transparent 28rem),radial-gradient(circle at 88% 76%,rgba(111,146,239,.27),transparent 29rem),linear-gradient(145deg,#10284f 0%,#173d74 55%,#235295 100%)!important}
+body:has(.auth-shell) .auth-story::before{content:"";position:absolute;width:min(42vw,500px);aspect-ratio:1;right:-140px;bottom:-110px;background:url("chrome_extension_v16/icons/icon128.png") center/contain no-repeat;opacity:.08;pointer-events:none}
+body:has(.auth-shell) .auth-panel{background:radial-gradient(circle at 92% 8%,rgba(49,95,216,.075),transparent 23rem),linear-gradient(180deg,#fcfdff,#f1f6fc)!important}
+body:has(.auth-shell) .auth-card{border-color:#d9e4f1!important;box-shadow:0 30px 90px rgba(31,56,102,.14)!important;backdrop-filter:blur(10px)}
+body:has(.auth-shell) .amazon-btn{background:linear-gradient(135deg,#111827,#1d2c44)!important}
+body:has(.auth-shell) .amazon-btn:hover{transform:translateY(-2px)!important}
+body:has(.auth-shell) .amazon-explain{background:linear-gradient(180deg,#f9fbff,#f3f7fc)!important;border-color:#dae5f1!important}
+
+body:has(.admin){min-height:100vh;background:radial-gradient(circle at 92% 8%,rgba(49,95,216,.11),transparent 28rem),radial-gradient(circle at 6% 92%,rgba(143,224,199,.13),transparent 25rem),linear-gradient(180deg,#f8fbff,#f2f6fb)!important}
+body:has(.admin) .admin{position:relative;z-index:1;background:rgba(255,255,255,.90);border:1px solid var(--vt-line);border-radius:26px;padding:clamp(26px,4vw,44px);box-shadow:var(--vt-shadow)}
+body:has(.admin) .admin::before{content:"";display:block;width:48px;height:48px;margin-bottom:18px;border-radius:14px;background:url("chrome_extension_v16/icons/icon128.png") center/78% no-repeat,linear-gradient(135deg,#a7ead6,#78b5ff);box-shadow:0 10px 25px rgba(34,72,167,.14)}
+body:has(.admin) .admin>h1{margin:.2em 0 .18em;font-size:clamp(36px,5vw,52px);letter-spacing:-.045em}
+body:has(.admin) .admin-actions{padding:16px!important;border:1px solid #e0e8f2;border-radius:16px!important;background:#f5f8fc}
+body:has(.admin) .feedback-item{border-color:#dfe7f1!important;border-radius:16px!important;box-shadow:0 8px 24px rgba(31,56,102,.045)}
+
+body:has(.brand-icon){--bg:#f6f9fd!important;--card:#fff!important;--text:#18253a!important;--muted:#647087!important;--line:#dce6f2!important;--soft:#edf5ff!important;--link:#315fd8!important;background:radial-gradient(circle at 94% 3%,rgba(49,95,216,.09),transparent 28rem),linear-gradient(180deg,#f8fbff,#f3f7fb)!important}
+body:has(.brand-icon) header{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.86)!important;backdrop-filter:blur(16px);border-color:#dfe8f2!important}
+body:has(.brand-icon) article{border-color:#dce6f1!important;border-radius:24px!important;box-shadow:var(--vt-shadow)!important;background:rgba(255,255,255,.96)!important}
+body:has(.brand-icon) .callout{background:linear-gradient(135deg,#eef5ff,#eaf8f3)!important;border-color:#d4e5ee!important}
+body:has(.brand-icon) h2{color:#173e76;letter-spacing:-.02em}
+body:has(.brand-icon) .brand-icon{border-radius:11px;box-shadow:0 8px 22px rgba(34,72,167,.12)}
+
+body:has(.app-shell).dark-theme .main-content{background:#0f172a!important}
+body:has(.app-shell).dark-theme .stat-card,body:has(.app-shell).dark-theme .panel,body:has(.app-shell).dark-theme .product-card,body:has(.app-shell).dark-theme .subpanel,body:has(.app-shell).dark-theme .lifecycle-box{background:#111827!important;border-color:#334155!important;box-shadow:none!important}
+body:has(.app-shell).dark-theme .stat-card strong{color:#f4f7fb}
+body:has(.app-shell).dark-theme .toolbar{background:#111827;border-color:#334155}
+body:has(.app-shell).dark-theme .health-kpis>div,body:has(.app-shell).dark-theme .review-metrics>div,body:has(.app-shell).dark-theme .rate-grid>div{background:#1e293b!important;border-color:#334155!important}
+
+@media(max-width:1000px){body:has(.site-header)::after,body:has(.app-shell)::after,body:has(.auth-shell)::after,body:has(.admin)::after,body:has(.brand-icon)::after{width:min(56vw,380px);right:-105px;bottom:-85px;opacity:.042}body:has(.app-shell) .app-shell{grid-template-columns:1fr!important}body:has(.app-shell) .sidebar .tagline{margin-left:0!important;margin-top:4px!important}body:has(.site-header) .product-preview{transform:none!important}}
+@media(max-width:640px){body:has(.site-header)::after,body:has(.app-shell)::after,body:has(.auth-shell)::after,body:has(.admin)::after,body:has(.brand-icon)::after{width:290px;right:-140px;bottom:-92px;opacity:.034}body:has(.app-shell) .panel{padding:17px!important}body:has(.admin) .admin{margin:22px 13px!important;padding:22px!important}}
