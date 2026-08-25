@@ -13,57 +13,24 @@ _original_landing = v17.production_landing
 _original_app = v17.production_app
 
 
-ASSET_VERSION = '20260825h'
+ASSET_VERSION = '20260825i'
 BRAND_ICON_HREF = f'/vinetrack-icon.png?v={ASSET_VERSION}'
 BRAND_ICON_STYLE = f'''
 <style id="vinetrackBrandIconOverride">
+.vt-brand-img{{display:block!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;flex:0 0 42px!important;object-fit:contain!important;background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;}}
+.vt-preview-brand-img{{display:block!important;width:34px!important;height:34px!important;object-fit:contain!important;}}
+.vt-sidebar-brand-img{{display:block!important;width:44px!important;height:44px!important;flex:0 0 44px!important;object-fit:contain!important;}}
+.vt-login-brand-img{{display:block!important;width:42px!important;height:42px!important;object-fit:contain!important;}}
+body:has(.site-header) .brand{{flex:0 0 auto!important;min-width:max-content!important;}}
+body:has(.site-header) .mini-logo{{display:flex!important;align-items:center!important;justify-content:center!important;width:34px!important;height:34px!important;min-width:34px!important;min-height:34px!important;background:none!important;border:0!important;box-shadow:none!important;}}
+body:has(.app-shell) .sidebar .brand::before{{display:none!important;content:none!important;}}
+body:has(.auth-shell) .logo-mark{{display:flex!important;align-items:center!important;justify-content:center!important;background:none!important;border:0!important;box-shadow:none!important;}}
 body:has(.site-header)::after,
 body:has(.app-shell)::after,
 body:has(.auth-shell)::after,
 body:has(.admin)::after,
 body:has(.brand-icon)::after,
-body:has(.auth-shell) .auth-story::before{{
-  background-image:url("/vinetrack-icon.png?v={ASSET_VERSION}")!important;
-}}
-body:has(.site-header) .brand-mark{{
-  display:block!important;
-  flex:0 0 42px!important;
-  width:42px!important;
-  height:42px!important;
-  min-width:42px!important;
-  min-height:42px!important;
-  font-size:0!important;
-  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/contain no-repeat!important;
-  background-color:transparent!important;
-  border:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
-}}
-body:has(.site-header) .brand{{
-  flex:0 0 auto!important;
-  min-width:max-content!important;
-}}
-body:has(.auth-shell) .logo-mark,
-body:has(.app-shell) .sidebar .brand::before,
-body:has(.admin) .admin::before{{
-  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/contain no-repeat!important;
-  border-color:transparent!important;
-  box-shadow:none!important;
-}}
-body:has(.site-header) .mini-logo{{
-  display:block!important;
-  flex:0 0 34px!important;
-  width:34px!important;
-  height:34px!important;
-  min-width:34px!important;
-  min-height:34px!important;
-  font-size:0!important;
-  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/contain no-repeat!important;
-  background-color:transparent!important;
-  border:0!important;
-  border-radius:0!important;
-  box-shadow:none!important;
-}}
+body:has(.auth-shell) .auth-story::before{{background-image:url("/vinetrack-icon.png?v={ASSET_VERSION}")!important;}}
 </style>
 '''
 
@@ -97,6 +64,26 @@ def _ensure_refresh(html):
     return html
 
 
+def _inject_real_brand_images(html):
+    html = html.replace(
+        '<span class="brand-mark">V</span>',
+        f'<img class="brand-mark vt-brand-img" src="{BRAND_ICON_HREF}" alt="" aria-hidden="true" width="42" height="42">'
+    )
+    html = html.replace(
+        '<div class="mini-logo">V</div>',
+        f'<div class="mini-logo"><img class="vt-preview-brand-img" src="{BRAND_ICON_HREF}" alt="" aria-hidden="true" width="34" height="34"></div>'
+    )
+    html = html.replace(
+        '<div class="brand">VineTrack</div>',
+        f'<div class="brand"><img class="vt-sidebar-brand-img" src="{BRAND_ICON_HREF}" alt="" aria-hidden="true" width="44" height="44"><span>VineTrack</span></div>'
+    )
+    html = html.replace(
+        '<span class="logo-mark">V</span>',
+        f'<span class="logo-mark"><img class="vt-login-brand-img" src="{BRAND_ICON_HREF}" alt="" aria-hidden="true" width="42" height="42"></span>'
+    )
+    return html
+
+
 def production_landing(html):
     html = _original_landing(html)
     replacements = {
@@ -118,6 +105,7 @@ def production_landing(html):
     }
     for old, new in replacements.items():
         html = html.replace(old, new)
+    html = _inject_real_brand_images(html)
     return _ensure_refresh(html)
 
 
@@ -142,6 +130,7 @@ def production_app(html):
     }
     for old, new in replacements.items():
         html = html.replace(old, new)
+    html = _inject_real_brand_images(html)
     return _ensure_refresh(html)
 
 
@@ -157,6 +146,7 @@ class Handler(v17.Handler):
         html = path.read_text(encoding='utf-8')
         if filename == 'login.html':
             html = html.replace('VineTrack Beta', 'VineTrack')
+        html = _inject_real_brand_images(html)
         return self._html(200, _ensure_refresh(html))
 
     def do_GET(self):
