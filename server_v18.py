@@ -13,10 +13,38 @@ _original_landing = v17.production_landing
 _original_app = v17.production_app
 
 
+BRAND_ICON_HREF = '/vinetrack-icon.svg?v=20260825'
+BRAND_ICON_STYLE = '''
+<style id="vinetrackBrandIconOverride">
+body:has(.site-header)::after,
+body:has(.app-shell)::after,
+body:has(.auth-shell)::after,
+body:has(.admin)::after,
+body:has(.brand-icon)::after,
+body:has(.auth-shell) .auth-story::before{
+  background-image:url("/vinetrack-icon.svg?v=20260825")!important;
+}
+body:has(.site-header) .brand-mark,
+body:has(.auth-shell) .logo-mark,
+body:has(.app-shell) .sidebar .brand::before,
+body:has(.admin) .admin::before{
+  background-image:url("/vinetrack-icon.svg?v=20260825"),linear-gradient(135deg,#a9ead7,#78b7ff)!important;
+}
+</style>
+'''
+
+
 def _ensure_refresh(html):
     href = '/brand-refresh.css'
+    additions = []
     if href not in html:
-        html = html.replace('</head>', '<link rel="stylesheet" href="/brand-refresh.css"></head>')
+        additions.append('<link rel="stylesheet" href="/brand-refresh.css">')
+    if 'rel="icon"' not in html and "rel='icon'" not in html:
+        additions.append(f'<link rel="icon" type="image/svg+xml" href="{BRAND_ICON_HREF}">')
+    if 'vinetrackBrandIconOverride' not in html:
+        additions.append(BRAND_ICON_STYLE)
+    if additions:
+        html = html.replace('</head>', ''.join(additions) + '</head>')
     return html
 
 
