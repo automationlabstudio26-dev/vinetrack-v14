@@ -6,4 +6,4 @@ COPY . .
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "server_v17.py"]
+CMD ["python", "launcher.py"]
