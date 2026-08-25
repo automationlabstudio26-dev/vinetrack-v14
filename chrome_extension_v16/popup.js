@@ -1,5 +1,5 @@
 const $=id=>document.getElementById(id);
-const EXT_VERSION='1.3.0';
+const EXT_VERSION='1.3.1';
 
 function show(text,type=''){$('syncMessage').textContent=text;$('syncMessage').className='message '+type;}
 function originPattern(base){try{const u=new URL(base);return u.origin+'/*';}catch{return '';}}
