@@ -13,8 +13,8 @@ _original_landing = v17.production_landing
 _original_app = v17.production_app
 
 
-ASSET_VERSION = '20260825f'
-BRAND_ICON_HREF = f'/vinetrack-icon.svg?v={ASSET_VERSION}'
+ASSET_VERSION = '20260825g'
+BRAND_ICON_HREF = f'/vinetrack-icon.png?v={ASSET_VERSION}'
 BRAND_ICON_STYLE = f'''
 <style id="vinetrackBrandIconOverride">
 body:has(.site-header)::after,
@@ -23,17 +23,21 @@ body:has(.auth-shell)::after,
 body:has(.admin)::after,
 body:has(.brand-icon)::after,
 body:has(.auth-shell) .auth-story::before{{
-  background-image:url("/vinetrack-icon.svg?v={ASSET_VERSION}")!important;
+  background-image:url("/vinetrack-icon.png?v={ASSET_VERSION}")!important;
 }}
 body:has(.site-header) .brand-mark,
 body:has(.auth-shell) .logo-mark,
 body:has(.app-shell) .sidebar .brand::before,
 body:has(.admin) .admin::before{{
-  background-image:url("/vinetrack-icon.svg?v={ASSET_VERSION}"),linear-gradient(135deg,#a9ead7,#78b7ff)!important;
+  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/82% no-repeat!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
 }}
 body:has(.site-header) .mini-logo{{
   font-size:0!important;
-  background:url("/vinetrack-icon.svg?v={ASSET_VERSION}") center/82% no-repeat!important;
+  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/82% no-repeat!important;
+  border-color:transparent!important;
+  box-shadow:none!important;
 }}
 </style>
 '''
@@ -62,7 +66,7 @@ def _ensure_refresh(html):
     if icon_css_href not in html:
         additions.append(f'<link rel="stylesheet" href="{icon_css_href}">')
     if 'rel="icon"' not in html and "rel='icon'" not in html:
-        additions.append(f'<link rel="icon" type="image/svg+xml" href="{BRAND_ICON_HREF}">')
+        additions.append(f'<link rel="icon" type="image/png" href="{BRAND_ICON_HREF}">')
     if 'vinetrackBrandIconOverride' not in html:
         additions.append(BRAND_ICON_STYLE)
     if additions:
