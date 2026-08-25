@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "VineTrack for Chrome",
   "version": "1.3.1",
-  "description": "Connect VineTrack to the Amazon account you use for Vine and sync visible Vine items only when you click Sync. No Amazon password is stored by VineTrack.",
+  "description": "Sync visible Amazon Vine items to VineTrack when you click Sync. VineTrack never stores your Amazon password.",
   "permissions": [
     "activeTab",
     "scripting",
