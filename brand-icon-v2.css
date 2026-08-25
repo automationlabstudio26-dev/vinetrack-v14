@@ -1,5 +1,5 @@
 /* VineTrack approved brand icon — loaded after brand-refresh.css so this mark wins everywhere. */
-:root{--vt-brand-icon:url("/vinetrack-icon.png?v=20260825g")}
+:root{--vt-brand-icon:url("/vinetrack-icon.png?v=20260825h")}
 
 body:has(.site-header)::after,
 body:has(.app-shell)::after,
@@ -10,33 +10,58 @@ body:has(.auth-shell) .auth-story::before{
   background-image:var(--vt-brand-icon)!important;
 }
 
-body:has(.site-header) .brand-mark,
+body:has(.site-header) .brand-mark{
+  display:block!important;
+  flex:0 0 42px!important;
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  min-height:42px!important;
+  font-size:0!important;
+  background:var(--vt-brand-icon) center/contain no-repeat!important;
+  background-color:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}
+
+body:has(.site-header) .brand{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+}
+
 body:has(.auth-shell) .logo-mark,
 body:has(.app-shell) .sidebar .brand::before,
 body:has(.admin) .admin::before{
-  background:var(--vt-brand-icon) center/82% no-repeat!important;
+  background:var(--vt-brand-icon) center/contain no-repeat!important;
   border-color:transparent!important;
-}
-
-body:has(.site-header) .brand-mark{
-  font-size:0!important;
-  background-color:transparent!important;
   box-shadow:none!important;
 }
 
 body:has(.site-header) .mini-logo{
+  display:block!important;
+  flex:0 0 34px!important;
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  min-height:34px!important;
   font-size:0!important;
-  background:var(--vt-brand-icon) center/82% no-repeat!important;
-  border-color:transparent!important;
+  background:var(--vt-brand-icon) center/contain no-repeat!important;
+  background-color:transparent!important;
+  border:0!important;
+  border-radius:0!important;
   box-shadow:none!important;
 }
 
 body:has(.app-shell) .sidebar .brand::before{
-  border-radius:12px;
-  box-shadow:none!important;
+  flex:0 0 44px!important;
+  width:44px!important;
+  height:44px!important;
+  background-size:contain!important;
+  border-radius:0!important;
 }
 
 body:has(.auth-shell) .logo-mark,
 body:has(.admin) .admin::before{
-  box-shadow:none!important;
+  background-size:contain!important;
 }
