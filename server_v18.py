@@ -13,37 +13,52 @@ _original_landing = v17.production_landing
 _original_app = v17.production_app
 
 
-BRAND_ICON_HREF = '/vinetrack-icon.svg?v=20260825b'
-BRAND_ICON_STYLE = '''
+ASSET_VERSION = '20260825f'
+BRAND_ICON_HREF = f'/vinetrack-icon.svg?v={ASSET_VERSION}'
+BRAND_ICON_STYLE = f'''
 <style id="vinetrackBrandIconOverride">
 body:has(.site-header)::after,
 body:has(.app-shell)::after,
 body:has(.auth-shell)::after,
 body:has(.admin)::after,
 body:has(.brand-icon)::after,
-body:has(.auth-shell) .auth-story::before{
-  background-image:url("/vinetrack-icon.svg?v=20260825b")!important;
-}
+body:has(.auth-shell) .auth-story::before{{
+  background-image:url("/vinetrack-icon.svg?v={ASSET_VERSION}")!important;
+}}
 body:has(.site-header) .brand-mark,
 body:has(.auth-shell) .logo-mark,
 body:has(.app-shell) .sidebar .brand::before,
-body:has(.admin) .admin::before{
-  background-image:url("/vinetrack-icon.svg?v=20260825b"),linear-gradient(135deg,#a9ead7,#78b7ff)!important;
-}
-body:has(.site-header) .mini-logo{
+body:has(.admin) .admin::before{{
+  background-image:url("/vinetrack-icon.svg?v={ASSET_VERSION}"),linear-gradient(135deg,#a9ead7,#78b7ff)!important;
+}}
+body:has(.site-header) .mini-logo{{
   font-size:0!important;
-  background:url("/vinetrack-icon.svg?v=20260825b") center/82% no-repeat!important;
-}
+  background:url("/vinetrack-icon.svg?v={ASSET_VERSION}") center/82% no-repeat!important;
+}}
 </style>
 '''
 
 
 def _ensure_refresh(html):
-    refresh_href = '/brand-refresh.css'
-    icon_css_href = '/brand-icon-v2.css?v=20260825b'
+    # Force new asset URLs into every rendered HTML response. This prevents
+    # long-lived browser caches from keeping the previous VineTrack branding.
+    asset_replacements = {
+        'href="landing.css"': f'href="/landing.css?v={ASSET_VERSION}"',
+        'href="/landing.css"': f'href="/landing.css?v={ASSET_VERSION}"',
+        'href="styles.css"': f'href="/styles.css?v={ASSET_VERSION}"',
+        'href="/styles.css"': f'href="/styles.css?v={ASSET_VERSION}"',
+        'href="login.css"': f'href="/login.css?v={ASSET_VERSION}"',
+        'href="/login.css"': f'href="/login.css?v={ASSET_VERSION}"',
+        'href="/production.css"': f'href="/production.css?v={ASSET_VERSION}"',
+    }
+    for old, new in asset_replacements.items():
+        html = html.replace(old, new)
+
+    refresh_href = f'/brand-refresh.css?v={ASSET_VERSION}'
+    icon_css_href = f'/brand-icon-v2.css?v={ASSET_VERSION}'
     additions = []
     if refresh_href not in html:
-        additions.append('<link rel="stylesheet" href="/brand-refresh.css">')
+        additions.append(f'<link rel="stylesheet" href="{refresh_href}">')
     if icon_css_href not in html:
         additions.append(f'<link rel="stylesheet" href="{icon_css_href}">')
     if 'rel="icon"' not in html and "rel='icon'" not in html:
