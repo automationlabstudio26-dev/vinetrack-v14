@@ -13,8 +13,8 @@ _original_landing = v17.production_landing
 _original_app = v17.production_app
 
 
-ASSET_VERSION = '20260825i'
-BRAND_ICON_HREF = f'/vinetrack-icon.png?v={ASSET_VERSION}'
+ASSET_VERSION = '20260825j'
+BRAND_ICON_HREF = f'/brand/vinetrack-icon.png?v={ASSET_VERSION}'
 BRAND_ICON_STYLE = f'''
 <style id="vinetrackBrandIconOverride">
 .vt-brand-img{{display:block!important;width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;flex:0 0 42px!important;object-fit:contain!important;background:none!important;border:0!important;box-shadow:none!important;border-radius:0!important;}}
@@ -30,7 +30,7 @@ body:has(.app-shell)::after,
 body:has(.auth-shell)::after,
 body:has(.admin)::after,
 body:has(.brand-icon)::after,
-body:has(.auth-shell) .auth-story::before{{background-image:url("/vinetrack-icon.png?v={ASSET_VERSION}")!important;}}
+body:has(.auth-shell) .auth-story::before{{background-image:url("{BRAND_ICON_HREF}")!important;}}
 </style>
 '''
 
@@ -139,6 +139,12 @@ v17.production_app = production_app
 
 
 class Handler(v17.Handler):
+    def _serve_brand_icon(self):
+        icon_path = v17.base.ROOT / 'vinetrack-icon.png'
+        if not icon_path.exists():
+            return self._json(404, {'error': 'Brand icon not found.'})
+        return self._send_bytes(200, icon_path.read_bytes(), 'image/png')
+
     def _serve_refreshed_static(self, filename):
         path = v17.base.ROOT / filename
         if not path.exists():
@@ -151,6 +157,8 @@ class Handler(v17.Handler):
 
     def do_GET(self):
         path = urlparse(self.path).path
+        if path == '/brand/vinetrack-icon.png':
+            return self._serve_brand_icon()
         static_pages = {
             '/login.html': 'login.html',
             '/privacy.html': 'privacy.html',
