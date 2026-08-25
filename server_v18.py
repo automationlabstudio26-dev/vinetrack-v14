@@ -13,7 +13,7 @@ _original_landing = v17.production_landing
 _original_app = v17.production_app
 
 
-ASSET_VERSION = '20260825g'
+ASSET_VERSION = '20260825h'
 BRAND_ICON_HREF = f'/vinetrack-icon.png?v={ASSET_VERSION}'
 BRAND_ICON_STYLE = f'''
 <style id="vinetrackBrandIconOverride">
@@ -25,18 +25,43 @@ body:has(.brand-icon)::after,
 body:has(.auth-shell) .auth-story::before{{
   background-image:url("/vinetrack-icon.png?v={ASSET_VERSION}")!important;
 }}
-body:has(.site-header) .brand-mark,
+body:has(.site-header) .brand-mark{{
+  display:block!important;
+  flex:0 0 42px!important;
+  width:42px!important;
+  height:42px!important;
+  min-width:42px!important;
+  min-height:42px!important;
+  font-size:0!important;
+  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/contain no-repeat!important;
+  background-color:transparent!important;
+  border:0!important;
+  border-radius:0!important;
+  box-shadow:none!important;
+}}
+body:has(.site-header) .brand{{
+  flex:0 0 auto!important;
+  min-width:max-content!important;
+}}
 body:has(.auth-shell) .logo-mark,
 body:has(.app-shell) .sidebar .brand::before,
 body:has(.admin) .admin::before{{
-  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/82% no-repeat!important;
+  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/contain no-repeat!important;
   border-color:transparent!important;
   box-shadow:none!important;
 }}
 body:has(.site-header) .mini-logo{{
+  display:block!important;
+  flex:0 0 34px!important;
+  width:34px!important;
+  height:34px!important;
+  min-width:34px!important;
+  min-height:34px!important;
   font-size:0!important;
-  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/82% no-repeat!important;
-  border-color:transparent!important;
+  background:url("/vinetrack-icon.png?v={ASSET_VERSION}") center/contain no-repeat!important;
+  background-color:transparent!important;
+  border:0!important;
+  border-radius:0!important;
   box-shadow:none!important;
 }}
 </style>
@@ -44,8 +69,6 @@ body:has(.site-header) .mini-logo{{
 
 
 def _ensure_refresh(html):
-    # Force new asset URLs into every rendered HTML response. This prevents
-    # long-lived browser caches from keeping the previous VineTrack branding.
     asset_replacements = {
         'href="landing.css"': f'href="/landing.css?v={ASSET_VERSION}"',
         'href="/landing.css"': f'href="/landing.css?v={ASSET_VERSION}"',
@@ -122,7 +145,6 @@ def production_app(html):
     return _ensure_refresh(html)
 
 
-# Patch only the presentation transforms used by the existing v17 handler.
 v17.production_landing = production_landing
 v17.production_app = production_app
 
